@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h1, h2, h3 {
+  @apply font-libre;
+}
+
+:root {
+  --color-burgundy: #993265;
+  --color-azure: #009edb;
+  --color-white: #ffffff;
+  --color-grey: #3b3b3b;
+  --color-grey-light: #8e8e8e;
+  --color-grey-dark: #1D1D1B;
+  --color-creme: #fff7e7;
+
+  --color-primary: var(--color-burgundy); 
+  --color-secondary: var(--color-creme);
+  --color-ternary: var(--color-azure);
+
+  --color-background: var(--color--white);
+
+  --color-heading-1: var(--color-burgundy);
+  --color-heading-2: var(--color-azure);
+  --color-heading-3: var(--color-azure);
+  --color-heading-4: var(--color-azure);
+
+  --color-body-large: var(--color-grey);
+  --color-body: var(--color-grey);
+  --color-small: var(--color-grey);
+
+  --color-border: var(--color-burgundy);
+  --color-link: var(--color-burgundy);
+  --color-link-hover: var(--color-azure);
+
+  --color-button-background: transparent;
+  --color-button-background-hover: var(--color-burgundy);
+  --color-button-border: var(--color-burgundy);
+  --color-button-border-hover: var(--color-burgundy);
+  --color-button-text: #000000;
+  --color-button-text-hover: var(--color-white);
+
+  --color-tag-border: var(--color-grey-dark);
+  --color-tag-text: var(--color-grey-dark);
+
+  --size-heading-1: 94px;
+  --size-heading-2: 48px;
+  --size-heading-3: 32px;
+  --size-heading-4: 20px;
+
+  --line-height-heading-1: 84%;
+  --line-height-heading-2: 84%;
+  --line-height-heading-3: 84%;
+  --line-height-heading-4: 84%;
+
+  --font-weight-heading-1: 800;
+  --font-weight-heading-2: 800;
+  --font-weight-heading-3: 800;
+  --font-weight-heading-4: 800;
+}
+
+.burgundy-theme {
+    --color-background: var(--color-burgundy);
+    --color-heading-1: var(--color-creme);
+    --color-heading-2: var(--color-creme);
+    --color-heading-3: var(--color-creme);
+    --color-body: var(--color-creme);
+    --color-button-background-hover: var(--color-creme);
+    --color-button-text-hover: var(--color-gray);
+    --color-button-border-hover: var(--color-creme);
+    --color-tag-text: var(--color-creme);
+    --color-tag-border: var(--color-creme);
+
+    @apply button-azure-on-burgundy;
+}
+
+.azure-theme {
+  --color-background: var(--color-azure);
+  --color-heading-1: var(--color-white);
+  --color-heading-2: var(--color-white);
+  --color-heading-3: var(--color-white);
+  --color-body: var(--color-white);
+  --color-tag-border: var(--color-white);
+  --color-tag-text: var(--color-white);
+}
+
+.creme-theme {
+  --color-primary: var(--color-creme);     
+  --color-secondary: var(--color-burgundy);
+  --color-heading-1: var(--color-burgundy);
+  --color-heading-2: var(--color-burgundy);
+  --color-heading-3: var(--color-burgundy);
+  --color-text: var(--color-gray);
+}
+
+.button-azure {
+  --color-button-background: var(--color-azure);
+  --color-button-background-hover: var(--color-burgundy);
+  --color-button-border: var(--color-azure);
+  --color-button-border-hover: var(--color-burgundy);
+  --color-button-text: var(--color-white);
+  --color-button-text-hover: var(--color-white);
+}
+
+.button-azure-on-burgundy {
+  @apply button-azure;
+  --color-button-background-hover: var(--color-creme);
+  --color-button-border-hover: var(--color-creme);
+  --color-button-text-hover: var(--color-grey);
+}
+
+.rich-text-body {
+  --size-heading-1: 94px;
+  --size-heading-2: 48px;
+  --size-heading-3: 36px;
+  --size-heading-4: 20px;
+
+  --color-heading-1: var(--color-grey);
+  --color-heading-2: var(--color-grey);
+  --color-heading-3: var(--color-grey);
+  --color-heading-4: var(--color-grey);
+
+  --line-height-heading-1: 170%;
+  --line-height-heading-2: 170%;
+  --line-height-heading-3: 170%;
+  --line-height-heading-4: 170%;
+
+  --font-weight-heading-1: 800;
+  --font-weight-heading-2: 800;
+  --font-weight-heading-3: 800;
+  --font-weight-heading-4: 700;
+}
