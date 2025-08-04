@@ -1,0 +1,144 @@
+import { FC, useEffect, useState } from "react";
+import ButtonLink from "../ButtonLink";
+import { createItemSmartLink } from "../../utils/smartlink";
+import { Product } from "../../model";
+import { getShopifyProduct } from "../../utils/api";
+import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
+import { defaultPortableRichTextResolvers } from "../../utils/richtext";
+import { PortableText } from "@portabletext/react";
+
+type ProductListItemProps = {
+  product: Product;
+  useShopify?: boolean;
+  shopifyProductHandle?: string;
+};
+
+export const ProductListItem: FC<ProductListItemProps> = ({
+  product
+}) => {
+
+  const [shopifyProduct, setShopifyProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Get the raw PIM integration value for dependency tracking
+  const pimIntegrationValue = product.elements.pim_integration_e_g__shopify.value;
+
+  useEffect(() => {
+    if (!pimIntegrationValue) return;
+    
+    // Parse the JSON inside useEffect to avoid creating new objects on every render
+    let pimData;
+    try {
+      pimData = JSON.parse(pimIntegrationValue);
+    } catch (error) {
+      console.error("Failed to parse PIM integration data:", error);
+      setError("Invalid PIM integration data");
+      return;
+    }
+
+    if (!pimData || !pimData[0]?.id) return;
+    
+    setLoading(true);
+    setError(null);
+
+    // Extract the numeric ID from the Shopify GID (e.g., "gid://shopify/Product/8291791175872" -> "8291791175872")
+    const productId = pimData[0].id?.split('/').pop();
+    if (!productId) {
+      setError("Invalid product ID format");
+      setLoading(false);
+      return;
+    }
+    
+    getShopifyProduct(productId)
+      .then((data) => {
+        setShopifyProduct(data);
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to fetch product");
+      })
+      .finally(() => setLoading(false));
+  }, [pimIntegrationValue]);
+
+  const productUrl = `/shop/${product.system.codename}`;
+
+  return (
+    <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+      {...createItemSmartLink(product.system.id)}>
+
+
+      {/* Product Image */}
+      <div className="aspect-square bg-gray-100 overflow-hidden">
+        {shopifyProduct?.image?.src ? (
+          <img
+            src={shopifyProduct.image.src}
+            alt={shopifyProduct.image.alt || product.elements.name.value || "Product image"}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-50">
+            <div className="text-gray-400 text-center">
+              <svg className="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm">No image</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Product Details */}
+      <div className="p-4">
+        {/* Loading indicator for Shopify data */}
+        {loading && (
+          <div className="mb-2">
+            <div className="animate-pulse bg-gray-200 h-4 w-24 rounded"></div>
+          </div>
+        )}
+
+        {/* Error indicator for Shopify data */}
+        {error && (
+          <div className="mb-2 text-xs text-red-600">
+            {error}
+          </div>
+        )}
+
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-burgundy transition-colors">
+          {shopifyProduct?.title || product.elements.name.value || "Untitled Product"}
+        </h3>
+
+        {/* Price from Shopify variants */}
+        {shopifyProduct?.variants?.[0]?.price && (
+          <div className="mb-3">
+            <span className="text-xl font-bold text-burgundy">
+              ${parseFloat(shopifyProduct.variants[0].price).toFixed(2)}
+            </span>
+            {shopifyProduct.variants[0].compare_at_price && 
+             parseFloat(shopifyProduct.variants[0].compare_at_price) > parseFloat(shopifyProduct.variants[0].price) && (
+              <span className="ml-2 text-sm text-gray-500 line-through">
+                ${parseFloat(shopifyProduct.variants[0].compare_at_price).toFixed(2)}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Product Description */}
+        <div className="text-gray-600 text-sm mb-4 line-clamp-3">
+          <PortableText
+            value={transformToPortableText(product.elements.body.value)}
+            components={defaultPortableRichTextResolvers}
+          />
+        </div>
+
+        {/* Action Button */}
+        <ButtonLink
+          href={productUrl}
+          style="azure"
+          className="w-full justify-center"
+        >
+          View Details
+        </ButtonLink>
+      </div>
+    </div>
+  );
+};

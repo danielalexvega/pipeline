@@ -6,9 +6,9 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: Karma Health Master Demo - Maarten 
+* Project: 🏛️ Australian Museum
 * Environment: Production
-* Id: 9779a69d-ee04-01e9-4071-f71a6a27dd65
+* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
 * 
 * -------------------------------------------------------------------------------
 **/
@@ -24,11 +24,12 @@ export const articleTypeValues = [
   "case_study",
   "research",
   "healthcare_policy_update",
-  "institutional_announcement",
   "industry_updates",
   "patient_education",
-  "professional_training",
   "educational",
+  "institutional_announcement",
+  "learning_materials",
+  "professional_training",
 ] as const;
 
 /**

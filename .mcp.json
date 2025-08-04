@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "kontent": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@kontent-ai/mcp-server@latest",
+        "stdio"
+      ],
+      "env": {
+        "KONTENT_API_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyOGJmZTk3MmVhOTg0YzdlODI4ZWMzNmExOGUyYjg4ZCIsImlhdCI6MTc1Mzk0NTM5MiwibmJmIjoxNzUzOTQ1MzkyLCJleHAiOjE3Njk4NDY1ODAsInZlciI6IjMuMC4wIiwidWlkIjoidmlydHVhbF9hNTQxMWZlZC0xNWZiLTQ2MjUtOTQzMC00NTBhZTZmNGI0Y2YiLCJzY29wZV9pZCI6ImJlNWNjNzhlMzA5ZDQyZGM4YjU1MjYxNzEzNjRhZDE5IiwicHJvamVjdF9jb250YWluZXJfaWQiOiI1YTNiM2ZjMjMzNTIwMmI2ZWNhNmRmMTc1Nzg3MTliMCIsImF1ZCI6Im1hbmFnZS5rZW50aWNvY2xvdWQuY29tIn0.flTuGrqPJMEsFawIDBH_PN_ns9qoshHEZVhrdKOTb30",
+        "KONTENT_ENVIRONMENT_ID": "ab00c5f7-85bf-02cf-55e1-a3d020897258"
+      }
+    }
+  }
+}

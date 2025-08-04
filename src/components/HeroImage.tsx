@@ -30,7 +30,7 @@ const HeroImage: FC<HeroImageProps> = ({ data, buttonLink }) => {
         >{data.subheadline?.value}</p>
         {buttonLink != "nolink" && (
           <ButtonLink href={buttonLink ?? "services"}>
-            <p>Explore our services</p>
+            <p>Book now</p>
           </ButtonLink>
         )}
       </div>

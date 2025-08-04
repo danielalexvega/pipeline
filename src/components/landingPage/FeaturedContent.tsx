@@ -24,10 +24,10 @@ const FeaturedContent: FC<FeaturedContentProps> = ({ featuredContent, parentId }
                   url: item.elements.image.value[0]?.url ?? "",
                   alt: item.elements.image.value[0]?.description ?? "",
                 },
-                title: item.elements.title.value,
-                publishDate: item.elements.publish_date.value ?? "",
-                introduction: item.elements.introduction.value,
-                topics: item.elements.topics.value.map(t => t.name),
+                title: item.elements.title?.value,
+                publishDate: item.elements.publish_date?.value ?? "",
+                introduction: item.elements.introduction?.value,
+                topics: item.elements.topics?.value.map(t => t.name),
                 itemId: item.system.id,
               }}
               displayFeatured={true}
@@ -49,10 +49,10 @@ const FeaturedContent: FC<FeaturedContentProps> = ({ featuredContent, parentId }
         <PageSection color="bg-burgundy" key={item.system.codename}>
           <div className="pt-24 pb-40">
             <CallToAction
-              title={item.elements.headline.value}
-              description={item.elements.subheadline.value}
-              buttonText={item.elements.button_label.value}
-              buttonHref={item.elements.button_link.value[0] ?? ""}
+              title={item.elements.headline?.value}
+              description={item.elements.subheadline?.value}
+              buttonText={item.elements.button_label?.value}
+              buttonHref={item.elements.button_link?.value[0] ?? ""}
               imageSrc={item.elements.image.value[0]?.url}
               imageAlt={item.elements.image.value[0]?.description ?? "alt"}
               imagePosition={item.elements.image_position.value[0]?.codename ?? "left"}

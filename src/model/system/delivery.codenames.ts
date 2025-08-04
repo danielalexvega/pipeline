@@ -6,9 +6,9 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: Karma Health Master Demo - Maarten 
+* Project: 🏛️ Australian Museum
 * Environment: Production
-* Id: 9779a69d-ee04-01e9-4071-f71a6a27dd65
+* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
 * 
 * -------------------------------------------------------------------------------
 **/
@@ -27,16 +27,23 @@ export type ContentTypeCodenames =
   | "call_to_action"
   | "disclaimer"
   | "event"
+  | "form__hubspot_integration"
   | "landing_page"
   | "page"
   | "person"
+  | "product"
   | "service"
   | "video";
 
 /**
  * Type representing all collections
  */
-export type CollectionCodenames = "academic_content" | "default" | "operations" | "patient_resources";
+export type CollectionCodenames =
+  | "academic_content"
+  | "default"
+  | "operations"
+  | "patient_resources"
+  | "shop_resources";
 
 /**
  * Type representing all workflows
@@ -48,10 +55,12 @@ export type WorkflowCodenames = "academic_resources" | "biographies" | "default"
  */
 export type TaxonomyCodenames =
   | "article_type"
+  | "empty_group"
   | "event_topic"
   | "event_type"
   | "general_healthcare_topics"
-  | "medical_specialties";
+  | "medical_specialties"
+  | "topic";
 
 /**
  * Type representing all worksflow steps across all workflows
@@ -86,6 +95,7 @@ export type ElementCodenames =
   | "button_label"
   | "button_link"
   | "caption"
+  | "cloudinary_integration"
   | "description"
   | "email"
   | "end_date"
@@ -93,6 +103,7 @@ export type ElementCodenames =
   | "event_type"
   | "featured_content"
   | "first_name"
+  | "form"
   | "guidelines"
   | "headline"
   | "hero_image"
@@ -108,6 +119,7 @@ export type ElementCodenames =
   | "metadata"
   | "name"
   | "phone"
+  | "pim_integration_e_g__shopify"
   | "prefix"
   | "publish_date"
   | "related_articles"

@@ -6,9 +6,9 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: Karma Health Master Demo - Maarten 
+* Project: 🏛️ Australian Museum
 * Environment: Production
-* Id: 9779a69d-ee04-01e9-4071-f71a6a27dd65
+* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
 * 
 * -------------------------------------------------------------------------------
 **/
@@ -18,8 +18,10 @@ export * from "./blogPost.ts";
 export * from "./callToAction.ts";
 export * from "./disclaimer.ts";
 export * from "./event.ts";
+export * from "./formHubspotIntegration.ts";
 export * from "./landingPage.ts";
 export * from "./page.ts";
 export * from "./person.ts";
+export * from "./product.ts";
 export * from "./service.ts";
 export * from "./video.ts";

@@ -6,9 +6,9 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: Karma Health Master Demo - Maarten 
+* Project: 🏛️ Australian Museum
 * Environment: Production
-* Id: 9779a69d-ee04-01e9-4071-f71a6a27dd65
+* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
 * 
 * -------------------------------------------------------------------------------
 **/
@@ -16,7 +16,7 @@
 import type { Elements } from "@kontent-ai/delivery-sdk";
 import type { CoreContentType } from "../system/index.ts";
 import type { Metadata } from "../content-type-snippets/index.ts";
-import type { Video, Disclaimer } from "./index.ts";
+import type { Video, Disclaimer, CallToAction } from "./index.ts";
 
 /**
  * Page
@@ -62,7 +62,7 @@ export type Page = CoreContentType<
      * Codename: body
      * Id: c5ac868e-97fe-419a-a256-635af1fb70aa
      */
-    readonly body: Elements.RichTextElement<Video | Disclaimer>;
+    readonly body: Elements.RichTextElement<Video | Disclaimer | CallToAction>;
     /**
      * URL
      *

@@ -30,7 +30,7 @@ const Tags: FC<TagsProps> = ({ tags, orientation = "horizontal", className = "",
     } ${className}`}
     {...createItemSmartLink(itemId)}
     {...elementCodename && createElementSmartLink(elementCodename)}>
-    {tags.map(tag => <Tag key={tag} text={tag} />)}
+    {tags?.map(tag => <Tag key={tag} text={tag} />)}
   </div>
 );
 

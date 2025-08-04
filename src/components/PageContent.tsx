@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { CallToAction, Disclaimer, Video } from "../model";
+import { CallToAction, Disclaimer, FormHubspotIntegration, Video } from "../model";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../utils/richtext";
 import { PortableText, PortableTextReactResolvers } from "@kontent-ai/rich-text-resolver/utils/react";
@@ -9,6 +9,7 @@ import CallToActionComponent from "./CallToAction";
 import { createElementSmartLink, createFixedAddSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { Elements, IContentItem } from "@kontent-ai/delivery-sdk";
 import VideoComponent from "./Video";
+import { HubSpotFormComponent } from "./HubSpotForm";
 
 type PageContentProps = {
   body: Elements.RichTextElement;
@@ -65,6 +66,10 @@ const createPortableTextComponents = (
               componentId={cta.system.id}
               componentName={cta.system.name}
             />
+          );
+        case "form__hubspot_integration":
+          return (
+            <HubSpotFormComponent item={item as FormHubspotIntegration} />
           );
         default:
           return (

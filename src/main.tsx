@@ -16,6 +16,8 @@ import PersonDetailPage from "./pages/PersonDetailPage.tsx";
 import { ErrorBoundary } from "react-error-boundary";
 import Loader from "./components/Loader.tsx";
 import Page from "./pages/Page.tsx";
+import OurShopPage from "./pages/ShopPage.tsx";
+import ProductDetailPage from "./pages/ProductDetailPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +57,14 @@ const BaseRouting: RouteObject[] = [
   {
     path: "our-team/:slug",
     Component: PersonDetailPage,
+  },
+  {
+    path: "shop",
+    Component: OurShopPage,
+  },
+  {
+    path: "shop/:slug",
+    Component: ProductDetailPage,
   },
   {
     path: ":slug",
