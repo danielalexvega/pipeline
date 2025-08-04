@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { CallToAction, Disclaimer, FormHubspotIntegration, Video, ReusableContentBlock } from "../model";
+import { CallToAction, Disclaimer, FormHubspotIntegration, ReusableContentBlock, Video } from "../model";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../utils/richtext";
 import { PortableText, PortableTextReactResolvers } from "@kontent-ai/rich-text-resolver/utils/react";
