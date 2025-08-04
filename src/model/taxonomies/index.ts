@@ -14,9 +14,8 @@
 **/
 
 export * from "./articleType.ts";
-export * from "./emptyGroup.ts";
+export * from "./australianMuseumTopics.ts";
 export * from "./eventTopic.ts";
 export * from "./eventType.ts";
 export * from "./generalHealthcareTopics.ts";
 export * from "./medicalSpecialties.ts";
-export * from "./topic.ts";

@@ -4,7 +4,7 @@ import { useAppContext } from "../context/AppContext";
 import { createClient } from "../utils/client";
 import { DeliveryError, ITaxonomyTerms } from "@kontent-ai/delivery-sdk";
 import ArticleList from "../components/articles/ArticleList";
-import { Page, Article, isArticleType, isGeneralHealthcareTopics, LanguageCodenames } from "../model";
+import { Page, Article, isArticleType, isAustralianMuseumTopics, LanguageCodenames } from "../model";
 import { useSearchParams } from "react-router-dom";
 import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/richtext";
 import { PortableText } from "@portabletext/react";
@@ -87,7 +87,7 @@ const useArticlesListingPage = (isPreview: boolean, lang: string | null) => {
 
   useEffect(() => {
     createClient(environmentId, apiKey, isPreview)
-      .item<Page>("research")
+      .item<Page>("articles")
       .languageParameter((lang ?? "default") as LanguageCodenames)
       .toPromise()
       .then(res => {
@@ -385,7 +385,7 @@ const ArticlesListingPage: React.FC = () => {
             )
               .filter(a =>
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                isGeneralHealthcareTopics(articleTopicCodename)
+                isAustralianMuseumTopics(articleTopicCodename)
                   ? a.elements.topics.value.find(t => t.codename === articleTopicCodename)
                   : true
               )

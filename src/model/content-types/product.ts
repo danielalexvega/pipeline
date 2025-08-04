@@ -14,6 +14,7 @@
 **/
 
 import type { Elements } from "@kontent-ai/delivery-sdk";
+import type { AustralianMuseumTopics } from "../taxonomies/index.ts";
 import type { CoreContentType } from "../system/index.ts";
 
 /**
@@ -44,6 +45,15 @@ export type Product = CoreContentType<
      */
     readonly body: Elements.RichTextElement<CoreContentType>;
     /**
+     * Australian Museum Topics
+     *
+     * Type: taxonomy
+     * Required: false
+     * Codename: australian_museum_topics
+     * Id: e3890835-d275-4f9e-82db-43b20672906a
+     */
+    readonly australian_museum_topics: Elements.TaxonomyElement<AustralianMuseumTopics, "australian_museum_topics">;
+    /**
      * PIM integration e.g. Shopify
      *
      * Type: custom
@@ -68,7 +78,12 @@ export type Product = CoreContentType<
 /**
  * Type representing all available element codenames for Product
  */
-export type ProductElementCodenames = "name" | "body" | "pim_integration_e_g__shopify" | "cloudinary_integration";
+export type ProductElementCodenames =
+  | "name"
+  | "body"
+  | "australian_museum_topics"
+  | "pim_integration_e_g__shopify"
+  | "cloudinary_integration";
 
 /**
  * Type guard for Product

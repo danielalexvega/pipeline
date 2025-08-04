@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { CallToAction, Disclaimer, FormHubspotIntegration, Video } from "../model";
+import { CallToAction, Disclaimer, FormHubspotIntegration, Video, ReusableContentBlock } from "../model";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../utils/richtext";
 import { PortableText, PortableTextReactResolvers } from "@kontent-ai/rich-text-resolver/utils/react";
@@ -52,6 +52,13 @@ const createPortableTextComponents = (
           return disclaimerItem.elements.type.value[0]?.codename === "promotional"
             ? <PromotionalDisclaimer title={disclaimerItem.elements.headline.value} text={disclaimerItem.elements.subheadline.value} componentId={item.system.id} componentName={item.system.name} />
             : <InformationalDisclaimer title={disclaimerItem.elements.headline.value} text={disclaimerItem.elements.subheadline.value} componentId={item.system.id} componentName={item.system.name} />;
+        case "reusable_content_block":
+          const content = item as ReusableContentBlock;
+          return <PageContent
+            body={content.elements.content}
+            itemId={content.system.id}
+            elementName="content"
+          />;
         case "call_to_action":
           const cta = item as CallToAction;
           return (

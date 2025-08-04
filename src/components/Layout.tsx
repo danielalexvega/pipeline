@@ -4,6 +4,7 @@ import Header from "./Header";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import { SmartLinkContextComponent } from "../context/SmartLinkContext";
 import { AppContextComponent } from "../context/AppContext";
+import PersonalizationDebug from "./PersonalizationDebug";
 
 const Layout: FC<PropsWithChildren> = () => (
   <AppContextComponent>
@@ -13,6 +14,7 @@ const Layout: FC<PropsWithChildren> = () => (
         <Header />
         <Outlet />
         <Footer />
+        <PersonalizationDebug />
       </div>
     </SmartLinkContextComponent>
   </AppContextComponent>

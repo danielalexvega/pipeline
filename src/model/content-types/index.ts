@@ -23,5 +23,6 @@ export * from "./landingPage.ts";
 export * from "./page.ts";
 export * from "./person.ts";
 export * from "./product.ts";
+export * from "./reusableContentBlock.ts";
 export * from "./service.ts";
 export * from "./video.ts";

@@ -14,7 +14,7 @@
 **/
 
 import type { Elements } from "@kontent-ai/delivery-sdk";
-import type { ArticleType, GeneralHealthcareTopics } from "../taxonomies/index.ts";
+import type { ArticleType, AustralianMuseumTopics } from "../taxonomies/index.ts";
 import type { CoreContentType } from "../system/index.ts";
 import type { Metadata } from "../content-type-snippets/index.ts";
 import type { Person } from "./index.ts";
@@ -83,6 +83,15 @@ export type Article = CoreContentType<
      */
     readonly body_copy: Elements.RichTextElement<CoreContentType>;
     /**
+     * Accessibility Checker
+     *
+     * Type: custom
+     * Required: true
+     * Codename: accessibility_checker
+     * Id: 754d0525-a0fc-4910-854e-7763c596dff2
+     */
+    readonly accessibility_checker: Elements.CustomElement;
+    /**
      * Article Type
      *
      * Type: taxonomy
@@ -92,14 +101,15 @@ export type Article = CoreContentType<
      */
     readonly article_type: Elements.TaxonomyElement<ArticleType, "article_type">;
     /**
-     * General Healthcare Topics
+     * Australian Museum Topics
      *
      * Type: taxonomy
      * Required: false
      * Codename: topics
-     * Id: 945fa79f-fc67-480b-8e20-b777cce76ab5
+     * Id: f82c0370-25b8-4d34-ad69-4dcedb3ce81c
+     * Guidelines: Topics
      */
-    readonly topics: Elements.TaxonomyElement<GeneralHealthcareTopics, "topics">;
+    readonly topics: Elements.TaxonomyElement<AustralianMuseumTopics, "topics">;
     /**
      * Related Articles
      *
@@ -132,6 +142,7 @@ export type ArticleElementCodenames =
   | "author"
   | "image"
   | "body_copy"
+  | "accessibility_checker"
   | "article_type"
   | "topics"
   | "related_articles"

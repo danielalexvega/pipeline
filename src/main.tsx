@@ -43,11 +43,11 @@ const BaseRouting: RouteObject[] = [
     Component: ServiceDetail,
   },
   {
-    path: "research",
+    path: "articles",
     Component: ArticlesListingPage,
   },
   {
-    path: "research/:slug",
+    path: "articles/:slug",
     Component: ArticleDetailPage,
   },
   {

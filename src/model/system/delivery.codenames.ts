@@ -32,6 +32,7 @@ export type ContentTypeCodenames =
   | "page"
   | "person"
   | "product"
+  | "reusable_content_block"
   | "service"
   | "video";
 
@@ -55,12 +56,11 @@ export type WorkflowCodenames = "academic_resources" | "biographies" | "default"
  */
 export type TaxonomyCodenames =
   | "article_type"
-  | "empty_group"
+  | "australian_museum_topics"
   | "event_topic"
   | "event_type"
   | "general_healthcare_topics"
-  | "medical_specialties"
-  | "topic";
+  | "medical_specialties";
 
 /**
  * Type representing all worksflow steps across all workflows
@@ -86,7 +86,9 @@ export type WorkflowStepCodenames =
  * Type representing all element codenames across all content types
  */
 export type ElementCodenames =
+  | "accessibility_checker"
   | "article_type"
+  | "australian_museum_topics"
   | "author"
   | "autoplay"
   | "biography"
@@ -96,6 +98,7 @@ export type ElementCodenames =
   | "button_link"
   | "caption"
   | "cloudinary_integration"
+  | "content"
   | "description"
   | "email"
   | "end_date"

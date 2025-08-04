@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { createClient } from "../utils/client";
 import { useAppContext } from "../context/AppContext";
@@ -15,6 +15,7 @@ import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink"
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import PageContent from "../components/PageContent";
+import { trackArticleTopics } from "../utils/personalization";
 
 const HeroImageAuthorCard: React.FC<{
   prefix?: string;
@@ -132,12 +133,27 @@ const ArticleDetailPage: React.FC = () => {
 
   useCustomRefresh(onRefresh);
 
+  // Track topic interests when article loads
+  useEffect(() => {
+    if (article && article.elements.topics.value.length > 0) {
+
+        const topics = article.elements.topics.value.map(topic => ({
+          name: topic.name,
+          codename: topic.codename
+        }));
+        
+        trackArticleTopics(topics);
+        
+        console.log(`📊 Tracked interest in topics${isPreview ? ' (preview mode)' : ''}:`, topics.map(t => t.name).join(', '));
+      }
+  }, [article, isPreview]);
+
   if (!article) {
     return <div className="flex-grow" />;
   }
 
-  const formattedDate = article.elements.publish_date.value
-    ? new Date(article.elements.publish_date.value).toLocaleDateString(
+  const formattedDate = article.elements.publish_date?.value
+    ? new Date(article.elements.publish_date?.value).toLocaleDateString(
       article.system.language === "es-ES" ? "es-ES" : "en-US",
       {
         year: "numeric",
@@ -162,7 +178,7 @@ const ArticleDetailPage: React.FC = () => {
             {...createItemSmartLink(article.system.id)}
             {...createElementSmartLink("title")}
             >
-              {article.elements.title.value}
+              {article.elements.title?.value}
             </h1>
             {author && (
               <HeroImageAuthorCard
