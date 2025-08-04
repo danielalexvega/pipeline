@@ -3,9 +3,6 @@ import ButtonLink from "../ButtonLink";
 import { createItemSmartLink } from "../../utils/smartlink";
 import { Product } from "../../model";
 import { getShopifyProduct } from "../../utils/api";
-import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
-import { defaultPortableRichTextResolvers } from "../../utils/richtext";
-import { PortableText } from "@portabletext/react";
 
 // Import the Storefront API types from utils
 import type { StorefrontProduct } from "../../utils/api";
