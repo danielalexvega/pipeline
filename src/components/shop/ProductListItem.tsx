@@ -46,7 +46,7 @@ export const ProductListItem: FC<ProductListItemProps> = ({
     setError(null);
 
     // Use the full Shopify GID or extract the numeric ID for backward compatibility
-    const productIdentifier = pimData[0].id.startsWith('gid://shopify/Product/') 
+    const productIdentifier = pimData[0].id.startsWith('gid') 
       ? pimData[0].id  // Use full GID
       : pimData[0].id?.split('/').pop() || pimData[0].id; // Extract numeric ID or use as-is
       
@@ -133,14 +133,6 @@ export const ProductListItem: FC<ProductListItemProps> = ({
             )}
           </div>
         )}
-
-        {/* Product Description */}
-        <div className="text-gray-600 text-sm mb-4 line-clamp-3">
-          <PortableText
-            value={transformToPortableText(product.elements.body.value)}
-            components={defaultPortableRichTextResolvers}
-          />
-        </div>
 
         {/* Action Button */}
         <ButtonLink
