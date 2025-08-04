@@ -7,6 +7,9 @@ import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../../utils/richtext";
 import { PortableText } from "@portabletext/react";
 
+// Import the Storefront API types from utils
+import type { StorefrontProduct } from "../../utils/api";
+
 type ProductListItemProps = {
   product: Product;
   useShopify?: boolean;
@@ -17,7 +20,7 @@ export const ProductListItem: FC<ProductListItemProps> = ({
   product
 }) => {
 
-  const [shopifyProduct, setShopifyProduct] = useState<any>(null);
+  const [shopifyProduct, setShopifyProduct] = useState<StorefrontProduct | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,15 +45,18 @@ export const ProductListItem: FC<ProductListItemProps> = ({
     setLoading(true);
     setError(null);
 
-    // Extract the numeric ID from the Shopify GID (e.g., "gid://shopify/Product/8291791175872" -> "8291791175872")
-    const productId = pimData[0].id?.split('/').pop();
-    if (!productId) {
+    // Use the full Shopify GID or extract the numeric ID for backward compatibility
+    const productIdentifier = pimData[0].id.startsWith('gid://shopify/Product/') 
+      ? pimData[0].id  // Use full GID
+      : pimData[0].id?.split('/').pop() || pimData[0].id; // Extract numeric ID or use as-is
+      
+    if (!productIdentifier) {
       setError("Invalid product ID format");
       setLoading(false);
       return;
     }
     
-    getShopifyProduct(productId)
+    getShopifyProduct(productIdentifier)
       .then((data) => {
         setShopifyProduct(data);
       })
@@ -69,10 +75,10 @@ export const ProductListItem: FC<ProductListItemProps> = ({
 
       {/* Product Image */}
       <div className="aspect-square bg-gray-100 overflow-hidden">
-        {shopifyProduct?.image?.src ? (
+        {shopifyProduct?.featuredImage?.url ? (
           <img
-            src={shopifyProduct.image.src}
-            alt={shopifyProduct.image.alt || product.elements.name.value || "Product image"}
+            src={shopifyProduct.featuredImage.url}
+            alt={shopifyProduct.featuredImage.altText || product.elements.name.value || "Product image"}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
@@ -108,15 +114,21 @@ export const ProductListItem: FC<ProductListItemProps> = ({
         </h3>
 
         {/* Price from Shopify variants */}
-        {shopifyProduct?.variants?.[0]?.price && (
+        {shopifyProduct?.variants?.edges?.[0]?.node?.price && (
           <div className="mb-3">
             <span className="text-xl font-bold text-burgundy">
-              ${parseFloat(shopifyProduct.variants[0].price).toFixed(2)}
+              {shopifyProduct.variants.edges[0].node.price.currencyCode === 'USD' ? '$' : ''}
+              {parseFloat(shopifyProduct.variants.edges[0].node.price.amount).toFixed(2)}
+              {shopifyProduct.variants.edges[0].node.price.currencyCode !== 'USD' && 
+               ` ${shopifyProduct.variants.edges[0].node.price.currencyCode}`}
             </span>
-            {shopifyProduct.variants[0].compare_at_price && 
-             parseFloat(shopifyProduct.variants[0].compare_at_price) > parseFloat(shopifyProduct.variants[0].price) && (
+            {shopifyProduct.variants.edges[0].node.compareAtPrice && 
+             parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount) > parseFloat(shopifyProduct.variants.edges[0].node.price.amount) && (
               <span className="ml-2 text-sm text-gray-500 line-through">
-                ${parseFloat(shopifyProduct.variants[0].compare_at_price).toFixed(2)}
+                {shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode === 'USD' ? '$' : ''}
+                {parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount).toFixed(2)}
+                {shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode !== 'USD' && 
+                 ` ${shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode}`}
               </span>
             )}
           </div>

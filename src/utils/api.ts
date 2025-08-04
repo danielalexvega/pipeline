@@ -12,76 +12,70 @@ type KeyFromSeedResponse = Readonly<{
   api_key: string;
 }>;
 
-// Shopify types
-type ShopifyProduct = Readonly<{
-  id: number;
+// Shopify Storefront API types
+export type StorefrontProduct = Readonly<{
+  id: string;
   title: string;
-  body_html: string;
-  vendor: string;
-  product_type: string;
-  created_at: string;
+  description: string;
+  descriptionHtml: string;
   handle: string;
-  updated_at: string;
-  published_at: string;
-  template_suffix: string | null;
-  published_scope: string;
-  tags: string;
-  status: string;
-  admin_graphql_api_id: string;
-  variants: ReadonlyArray<ShopifyVariant>;
-  options: ReadonlyArray<ShopifyOption>;
-  images: ReadonlyArray<ShopifyImage>;
-  image: ShopifyImage | null;
+  productType: string;
+  vendor: string;
+  tags: ReadonlyArray<string>;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  availableForSale: boolean;
+  totalInventory: number;
+  variants: {
+    edges: ReadonlyArray<{
+      node: StorefrontVariant;
+    }>;
+  };
+  images: {
+    edges: ReadonlyArray<{
+      node: StorefrontImage;
+    }>;
+  };
+  featuredImage: StorefrontImage | null;
+  options: ReadonlyArray<StorefrontOption>;
 }>;
 
-type ShopifyVariant = Readonly<{
-  id: number;
-  product_id: number;
+export type StorefrontVariant = Readonly<{
+  id: string;
   title: string;
-  price: string;
-  sku: string;
-  position: number;
-  inventory_policy: string;
-  compare_at_price: string | null;
-  fulfillment_service: string;
-  inventory_management: string;
-  option1: string;
-  option2: string | null;
-  option3: string | null;
-  created_at: string;
-  updated_at: string;
-  taxable: boolean;
-  barcode: string;
-  grams: number;
-  image_id: number | null;
-  weight: number;
-  weight_unit: string;
-  inventory_item_id: number;
-  inventory_quantity: number;
-  old_inventory_quantity: number;
-  admin_graphql_api_id: string;
+  sku: string | null;
+  availableForSale: boolean;
+  quantityAvailable: number | null;
+  price: {
+    amount: string;
+    currencyCode: string;
+  };
+  compareAtPrice: {
+    amount: string;
+    currencyCode: string;
+  } | null;
+  weight: number | null;
+  weightUnit: string;
+  image: StorefrontImage | null;
+  selectedOptions: ReadonlyArray<{
+    name: string;
+    value: string;
+  }>;
 }>;
 
-type ShopifyOption = Readonly<{
-  id: number;
-  product_id: number;
+export type StorefrontOption = Readonly<{
+  id: string;
   name: string;
-  position: number;
   values: ReadonlyArray<string>;
 }>;
 
-type ShopifyImage = Readonly<{
-  id: number;
-  product_id: number;
-  position: number;
-  created_at: string;
-  updated_at: string;
-  alt: string | null;
-  width: number;
-  height: number;
-  src: string;
-  variant_ids: ReadonlyArray<number>;
-  admin_graphql_api_id: string;
+export type StorefrontImage = Readonly<{
+  id: string;
+  url: string;
+  altText: string | null;
+  width: number | null;
+  height: number | null;
 }>;
 
 
@@ -151,8 +145,8 @@ export const getKeyForTokenSeed = (
   return get(url, requestContext).then(res => res.json());
 };
 
-// Shopify API functions (now calling our serverless endpoints)
-export const getShopifyProducts = async (): Promise<ReadonlyArray<ShopifyProduct> | null> => {
+// Shopify Storefront API functions (calling our serverless endpoints)
+export const getShopifyProducts = async (): Promise<ReadonlyArray<StorefrontProduct> | null> => {
   // This would need a separate API endpoint for multiple products
   // For now, returning null as you're only using single product fetching
   console.warn('getShopifyProducts not implemented for serverless API');
@@ -160,10 +154,10 @@ export const getShopifyProducts = async (): Promise<ReadonlyArray<ShopifyProduct
 };
 
 export const getShopifyProduct = async (
-  productId: number | string,
-): Promise<ShopifyProduct | null> => {
+  productIdOrHandle: string | number,
+): Promise<StorefrontProduct | null> => {
   try {
-    const response = await fetch(`/api/shopify/products/${productId}`, {
+    const response = await fetch(`/api/shopify/products/${productIdOrHandle}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -171,19 +165,38 @@ export const getShopifyProduct = async (
     });
 
     if (response.ok) {
-      const product = await response.json() as ShopifyProduct;
+      const product = await response.json() as StorefrontProduct;
       return product;
     }
 
     if (response.status === 404) {
-      console.warn(`Shopify product ${productId} not found`);
+      console.warn(`Shopify product ${productIdOrHandle} not found`);
       return null;
     }
 
-    console.error(`Failed to fetch Shopify product ${productId}:`, response.status, await response.text());
+    console.error(`Failed to fetch Shopify product ${productIdOrHandle}:`, response.status, await response.text());
     return null;
   } catch (error) {
-    console.error(`Error fetching Shopify product ${productId}:`, error);
+    console.error(`Error fetching Shopify product ${productIdOrHandle}:`, error);
     return null;
   }
+};
+
+// Helper functions to work with Storefront API data structure
+export const getProductVariants = (product: StorefrontProduct): ReadonlyArray<StorefrontVariant> => {
+  return product.variants.edges.map(edge => edge.node);
+};
+
+export const getProductImages = (product: StorefrontProduct): ReadonlyArray<StorefrontImage> => {
+  return product.images.edges.map(edge => edge.node);
+};
+
+export const getVariantPrice = (variant: StorefrontVariant): string => {
+  return `${variant.price.amount} ${variant.price.currencyCode}`;
+};
+
+export const getVariantCompareAtPrice = (variant: StorefrontVariant): string | null => {
+  return variant.compareAtPrice 
+    ? `${variant.compareAtPrice.amount} ${variant.compareAtPrice.currencyCode}`
+    : null;
 };
