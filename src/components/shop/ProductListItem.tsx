@@ -43,9 +43,7 @@ export const ProductListItem: FC<ProductListItemProps> = ({
     setError(null);
 
     // Use the full Shopify GID or extract the numeric ID for backward compatibility
-    const productIdentifier = pimData[0].id.startsWith('gid') 
-      ? pimData[0].id  // Use full GID
-      : pimData[0].id?.split('/').pop() || pimData[0].id; // Extract numeric ID or use as-is
+    const productIdentifier = pimData[0].id?.split('/').pop() || pimData[0].id; // Extract numeric ID or use as-is
       
     if (!productIdentifier) {
       setError("Invalid product ID format");
