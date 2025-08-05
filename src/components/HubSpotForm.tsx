@@ -17,7 +17,7 @@ export const HubSpotFormComponent: FC<Props> = (props) => {
         >
       {props.item.elements.form.value && (
         <HubspotForm
-          portalId={process.env.VITE_HUBSPOT_PORTAL_ID}
+          portalId={import.meta.env.VITE_HUBSPOT_PORTAL_ID}
           formId={(() => {
             try {
               return JSON.parse(props.item.elements.form.value).formId;
