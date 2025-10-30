@@ -14,7 +14,7 @@ type ImageWithTagProps = Readonly<{
 const ImageWithTag: FC<ImageWithTagProps> = ({ image, tagText, className }) => {
   return (
     <div className={`relative ${className}`}>
-      <span className="px-3.5 py-1.5 absolute text-body-xs bg-azure text-white mt-4 ms-4 rounded-md font-bold">
+      <span className="px-3.5 py-1.5 absolute text-body-xs bg-darkGreen text-white mt-4 ms-4 rounded-md font-bold">
         {tagText}
       </span>
       <img

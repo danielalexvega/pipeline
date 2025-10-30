@@ -11,6 +11,9 @@ export default {
         burgundy: "#993265",
         azure: "#009edb",
         white: '#ffffff',
+        darkGreen: '#0D3311',
+        gold: '#FFCC00',
+        mintGreen: '#ADEBB3',
         grey: {
           light: "#8e8e8e",
           DEFAULT: "#3b3b3b",
@@ -59,7 +62,8 @@ export default {
     },
       fontFamily: {
         sans: ['"Source Sans 3"', 'Arial', 'sans-serif'],
-        libre: ['"Abhaya Libre"', "Arial"]
+        libre: ['"Lexend"', "Arial"],
+        lexend: ['"Lexend"', 'Arial', 'sans-serif']
       }
     },
     container: {

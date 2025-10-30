@@ -9,7 +9,7 @@ type TagProps = Readonly<{
 const Tag: FC<TagProps> = ({ text, className = "" }) => (
   <div
     key={text}
-    className={`w-fit px-4 py-2 border-solid border rounded-full border-tag-border-color ${className}`}
+    className={`w-fit px-4 py-2 border-solid border rounded-full border-tag-border-color bg-white ${className}`}
   >
     <p className="text-tag-text-color text-body-xs uppercase font-[600]">{text}</p>
   </div>

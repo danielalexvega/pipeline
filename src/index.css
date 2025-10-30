@@ -14,34 +14,38 @@ h1, h2, h3 {
   --color-grey-light: #8e8e8e;
   --color-grey-dark: #1D1D1B;
   --color-creme: #fff7e7;
+  --color-mintGreen: #ADEBB3;
+  --color-darkGreen: #0D3311;
+  --color-gold: #FFCC00;
+  --color-black: #000000;
 
-  --color-primary: var(--color-burgundy); 
-  --color-secondary: var(--color-creme);
-  --color-ternary: var(--color-azure);
+  --color-primary: var(--color-darkGreen); 
+  --color-secondary: var(--color-white);
+  --color-ternary: var(--color-gold);
 
   --color-background: var(--color--white);
 
-  --color-heading-1: var(--color-burgundy);
-  --color-heading-2: var(--color-azure);
-  --color-heading-3: var(--color-azure);
-  --color-heading-4: var(--color-azure);
+  --color-heading-1: var(--color-darkGreen);
+  --color-heading-2: var(--color-darkGreen);
+  --color-heading-3: var(--color-darkGreen);
+  --color-heading-4: var(--color-darkGreen);
 
   --color-body-large: var(--color-grey);
   --color-body: var(--color-grey);
   --color-small: var(--color-grey);
 
-  --color-border: var(--color-burgundy);
-  --color-link: var(--color-burgundy);
-  --color-link-hover: var(--color-azure);
+  --color-border: var(--color-darkGreen);
+  --color-link: var(--color-darkGreen);
+  --color-link-hover: var(--color-darkGreen);
 
   --color-button-background: transparent;
-  --color-button-background-hover: var(--color-burgundy);
-  --color-button-border: var(--color-burgundy);
-  --color-button-border-hover: var(--color-burgundy);
+  --color-button-background-hover: var(--color-darkGreen);
+  --color-button-border: var(--color-darkGreen);
+  --color-button-border-hover: var(--color-darkGreen);
   --color-button-text: #000000;
   --color-button-text-hover: var(--color-white);
 
-  --color-tag-border: var(--color-grey-dark);
+  --color-tag-border: var(--color-black);
   --color-tag-text: var(--color-grey-dark);
 
   --size-heading-1: 94px;
@@ -60,19 +64,20 @@ h1, h2, h3 {
   --font-weight-heading-4: 800;
 }
 
-.burgundy-theme {
-    --color-background: var(--color-burgundy);
-    --color-heading-1: var(--color-creme);
-    --color-heading-2: var(--color-creme);
-    --color-heading-3: var(--color-creme);
-    --color-body: var(--color-creme);
-    --color-button-background-hover: var(--color-creme);
-    --color-button-text-hover: var(--color-gray);
-    --color-button-border-hover: var(--color-creme);
-    --color-tag-text: var(--color-creme);
-    --color-tag-border: var(--color-creme);
+.mintGreen-theme {
+    --color-background: var(--color-mintGreen);
+    --color-heading-1: var(--color-darkGreen);
+    --color-heading-2: var(--color-darkGreen);
+    --color-heading-3: var(--color-black);
+    --color-body: var(--color-darkGreen);
+    --color-button-background-hover: var(--color-white);
+    --color-button-text-hover: var(--color-grey);
+    --color-button-border-hover: var(--color-white);
+    --color-tag-text: var(--color-black);
+    --color-tag-border: var(--color-black);
 
-    @apply button-azure-on-burgundy;
+    background-color: var(--color-mintGreen);
+    @apply button-mintGreen-on-burgundy;
 }
 
 .azure-theme {
@@ -81,7 +86,7 @@ h1, h2, h3 {
   --color-heading-2: var(--color-white);
   --color-heading-3: var(--color-white);
   --color-body: var(--color-white);
-  --color-tag-border: var(--color-white);
+  --color-tag-border: var(--color-black);
   --color-tag-text: var(--color-white);
 }
 
@@ -94,20 +99,20 @@ h1, h2, h3 {
   --color-text: var(--color-gray);
 }
 
-.button-azure {
-  --color-button-background: var(--color-azure);
-  --color-button-background-hover: var(--color-burgundy);
-  --color-button-border: var(--color-azure);
-  --color-button-border-hover: var(--color-burgundy);
+.button-mintGreen {
+  --color-button-background: var(--color-darkGreen);
+  --color-button-background-hover: var(--color-white);
+  --color-button-border: var(--color-darkGreen);
+  --color-button-border-hover: var(--color-black);
   --color-button-text: var(--color-white);
   --color-button-text-hover: var(--color-white);
 }
 
-.button-azure-on-burgundy {
-  @apply button-azure;
-  --color-button-background-hover: var(--color-creme);
-  --color-button-border-hover: var(--color-creme);
-  --color-button-text-hover: var(--color-grey);
+.button-mintGreen-on-burgundy {
+  @apply button-mintGreen;
+  --color-button-background-hover: var(--color-white);
+  --color-button-border-hover: var(--color-black);
+  --color-button-text-hover: var(--color-black);
 }
 
 .rich-text-body {

@@ -6,15 +6,15 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: 🏛️ Australian Museum
+* Project: 🧔🏻 Personalization Example
 * Environment: Production
-* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
+* Id: c4aa2909-21c3-026b-85f1-89cb4ae991ca
 * 
 * -------------------------------------------------------------------------------
 **/
 
 import type { Elements } from "@kontent-ai/delivery-sdk";
-import type { ArticleType, AustralianMuseumTopics } from "../taxonomies/index.ts";
+import type { Channel, MusicArticles } from "../taxonomies/index.ts";
 import type { CoreContentType } from "../system/index.ts";
 import type { Metadata } from "../content-type-snippets/index.ts";
 import type { Person } from "./index.ts";
@@ -83,34 +83,6 @@ export type Article = CoreContentType<
      */
     readonly body_copy: Elements.RichTextElement<CoreContentType>;
     /**
-     * Accessibility Checker
-     *
-     * Type: custom
-     * Required: true
-     * Codename: accessibility_checker
-     * Id: 754d0525-a0fc-4910-854e-7763c596dff2
-     */
-    readonly accessibility_checker: Elements.CustomElement;
-    /**
-     * Article Type
-     *
-     * Type: taxonomy
-     * Required: false
-     * Codename: article_type
-     * Id: 2f84cb44-a29b-4f09-88f5-847d0f0b82a2
-     */
-    readonly article_type: Elements.TaxonomyElement<ArticleType, "article_type">;
-    /**
-     * Australian Museum Topics
-     *
-     * Type: taxonomy
-     * Required: false
-     * Codename: topics
-     * Id: f82c0370-25b8-4d34-ad69-4dcedb3ce81c
-     * Guidelines: Topics
-     */
-    readonly topics: Elements.TaxonomyElement<AustralianMuseumTopics, "topics">;
-    /**
      * Related Articles
      *
      * Type: modular_content
@@ -128,6 +100,43 @@ export type Article = CoreContentType<
      * Id: 33f5f8e9-aca2-4f52-a3b2-68ea6337ed59
      */
     readonly url_slug: Elements.UrlSlugElement;
+    /**
+     * Channel
+     *
+     * Type: taxonomy
+     * Required: false
+     * Codename: channel
+     * Id: 59bea66f-22fa-458d-a842-a482d9e764f6
+     */
+    readonly channel: Elements.TaxonomyElement<Channel, "channel">;
+    /**
+     * X
+     *
+     * Type: text
+     * Required: false
+     * Codename: x
+     * Id: 00a53b1d-53cc-4bc3-babd-2e47e4158d11
+     */
+    readonly x: Elements.TextElement;
+    /**
+     * LinkedIn
+     *
+     * Type: text
+     * Required: false
+     * Codename: linkedin
+     * Id: 8cbf0a1a-9dd8-44b5-82d0-bffc64d61151
+     */
+    readonly linkedin: Elements.TextElement;
+    /**
+     * Music Articles
+     *
+     * Type: taxonomy
+     * Required: false
+     * Codename: music_topics
+     * Id: f939d795-a222-4c6f-9e46-98d45cd96563
+     * Guidelines: Select relevant music genres and eras for this article
+     */
+    readonly music_topics: Elements.TaxonomyElement<MusicArticles, "music_topics">;
   } & Metadata,
   "article"
 >;
@@ -142,14 +151,15 @@ export type ArticleElementCodenames =
   | "author"
   | "image"
   | "body_copy"
-  | "accessibility_checker"
-  | "article_type"
-  | "topics"
   | "related_articles"
   | "metadata__title"
   | "metadata__keywords"
   | "metadata__description"
-  | "url_slug";
+  | "url_slug"
+  | "channel"
+  | "x"
+  | "linkedin"
+  | "music_topics";
 
 /**
  * Type guard for Article

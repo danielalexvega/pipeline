@@ -6,15 +6,15 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: 🏛️ Australian Museum
+* Project: 🧔🏻 Personalization Example
 * Environment: Production
-* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
+* Id: c4aa2909-21c3-026b-85f1-89cb4ae991ca
 * 
 * -------------------------------------------------------------------------------
 **/
 
 import type { Elements } from "@kontent-ai/delivery-sdk";
-import type { AustralianMuseumTopics } from "../taxonomies/index.ts";
+import type { AustralianMuseumTopics, Personas } from "../taxonomies/index.ts";
 import type { CoreContentType } from "../system/index.ts";
 
 /**
@@ -44,6 +44,15 @@ export type ReusableContentBlock = CoreContentType<
      * Id: b22a294d-460a-42ab-9fec-1dfc47ee7a68
      */
     readonly australian_museum_topics: Elements.TaxonomyElement<AustralianMuseumTopics, "australian_museum_topics">;
+    /**
+     * Personas
+     *
+     * Type: taxonomy
+     * Required: false
+     * Codename: personas
+     * Id: b268772f-7263-4ba5-934e-00703fa8fb4a
+     */
+    readonly personas: Elements.TaxonomyElement<Personas, "personas">;
   },
   "reusable_content_block"
 >;
@@ -51,7 +60,7 @@ export type ReusableContentBlock = CoreContentType<
 /**
  * Type representing all available element codenames for Reusable Content Block
  */
-export type ReusableContentBlockElementCodenames = "content" | "australian_museum_topics";
+export type ReusableContentBlockElementCodenames = "content" | "australian_museum_topics" | "personas";
 
 /**
  * Type guard for Reusable Content Block

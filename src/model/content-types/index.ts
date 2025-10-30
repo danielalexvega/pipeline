@@ -6,15 +6,17 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: 🏛️ Australian Museum
+* Project: 🧔🏻 Personalization Example
 * Environment: Production
-* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
+* Id: c4aa2909-21c3-026b-85f1-89cb4ae991ca
 * 
 * -------------------------------------------------------------------------------
 **/
 
+export * from "./aBCta.ts";
 export * from "./article.ts";
 export * from "./blogPost.ts";
+export * from "./bynderImage.ts";
 export * from "./callToAction.ts";
 export * from "./disclaimer.ts";
 export * from "./event.ts";

@@ -4,7 +4,7 @@ import { useAppContext } from "../context/AppContext";
 import { createClient } from "../utils/client";
 import { DeliveryError, ITaxonomyTerms } from "@kontent-ai/delivery-sdk";
 import ArticleList from "../components/articles/ArticleList";
-import { Page, Article, isArticleType, isAustralianMuseumTopics, LanguageCodenames } from "../model";
+import { Page, Article, LanguageCodenames } from "../model";
 import { useSearchParams } from "react-router-dom";
 import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/richtext";
 import { PortableText } from "@portabletext/react";
@@ -33,11 +33,12 @@ type FeaturedArticleProps = Readonly<{
   urlSlug: string;
   itemId: string;
 }>;
-const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ image, title, published, tags, description, urlSlug, itemId }) => {
+
+const FeaturedArticleVertical: React.FC<FeaturedArticleProps> = ({ image, title, published, tags, description, urlSlug, itemId }) => {
   return (
     <div className="flex flex-col lg:flex-row items-center pt-[104px] pb-[120px] gap-12"
-    {...createItemSmartLink(itemId)}
-    {...createElementSmartLink("featured_article")}>
+      {...createItemSmartLink(itemId)}
+      {...createElementSmartLink("featured_article")}>
       <ImageWithTag
         image={{
           url: image.url,
@@ -50,10 +51,22 @@ const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ image, title, publish
       />
 
       <div className="lg:basis-1/2 xl:basis-3/5">
-        <h2 className="text-heading-2 text-heading-2-color">{title}</h2>
-        <p className="text-body-md text-body-color pt-4">{published}</p>
+        <h2 className="text-heading-2 text-black mb-4">{title}</h2>
+        {/* Published Date */}
+        <p className="text-gray-light text-body-sm mb-3">
+          {published
+            && `Published on ${new Date(published).toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+              day: "numeric",
+            })
+            }`}
+        </p>
+
+
+
         <Tags tags={tags} className="mt-4" />
-        <p className="text-body-lg text-body-color pt-3">
+        <p className="text-body-md text-body-color pt-3">
           {description}
         </p>
         <ButtonLink href={urlSlug} className="mt-6">Read More</ButtonLink>
@@ -110,6 +123,7 @@ const useArticlesListingPage = (isPreview: boolean, lang: string | null) => {
 const useArticles = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
+  const [featuredArticle, setFeaturedArticle] = useState<Article | null>(null);
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
     // Update the specific article in the list
@@ -147,10 +161,18 @@ const useArticles = (isPreview: boolean, lang: string | null) => {
       .toPromise()
       .then(res => {
         setArticles(res.data.items);
+        // Set a random featured article
+        if (res.data.items.length > 0) {
+          const randomIndex = Math.floor(Math.random() * res.data.items.length);
+          setFeaturedArticle(res.data.items[randomIndex] || null);
+        } else {
+          setFeaturedArticle(null);
+        }
       })
       .catch((err) => {
         if (err instanceof DeliveryError) {
           setArticles([]);
+          setFeaturedArticle(null);
         } else {
           throw err;
         }
@@ -159,7 +181,7 @@ const useArticles = (isPreview: boolean, lang: string | null) => {
 
   useLivePreview(handleLiveUpdate);
 
-  return articles;
+  return { articles, featuredArticle };
 };
 
 const useArticleTypes = (isPreview: boolean) => {
@@ -168,7 +190,7 @@ const useArticleTypes = (isPreview: boolean) => {
 
   useEffect(() => {
     createClient(environmentId, apiKey, isPreview)
-      .taxonomy("article_type")
+      .taxonomy("music_articles")
       .toPromise()
       .then(res => {
         setTypes(res.data.taxonomy);
@@ -185,28 +207,6 @@ const useArticleTypes = (isPreview: boolean) => {
   return types;
 };
 
-const useArticleTopics = (isPreview: boolean) => {
-  const { environmentId, apiKey } = useAppContext();
-  const [topics, setTopics] = useState<{ terms: ITaxonomyTerms[] }>({ terms: [] });
-
-  useEffect(() => {
-    createClient(environmentId, apiKey, isPreview)
-      .taxonomy("general_healthcare_topics")
-      .toPromise()
-      .then(res => {
-        setTopics(res.data.taxonomy);
-      })
-      .catch((err) => {
-        if (err instanceof DeliveryError) {
-          setTopics({ terms: [] });
-        } else {
-          throw err;
-        }
-      });
-  }, [environmentId, apiKey, isPreview]);
-
-  return topics;
-};
 
 const ArticlesListingPage: React.FC = () => {
   const { environmentId, apiKey } = useAppContext();
@@ -215,15 +215,11 @@ const ArticlesListingPage: React.FC = () => {
   const lang = searchParams.get("lang");
 
   const articlesListingPage = useArticlesListingPage(isPreview, lang);
-  const articles = useArticles(isPreview, lang);
+  const { articles, featuredArticle } = useArticles(isPreview, lang);
   const articleTypes = useArticleTypes(isPreview);
-  const articleTopics = useArticleTopics(isPreview);
 
   const [articleType, setArticleType] = useState<string>("All");
-  const [articleTopic, setArticleTopic] = useState<string>("All");
 
-  const articleTypeCodename = searchParams.get("type");
-  const articleTopicCodename = searchParams.get("topic");
 
   const handleArticleTypeChange = (option: SelectorOption) => {
     setArticleType(option.label);
@@ -231,15 +227,6 @@ const ArticlesListingPage: React.FC = () => {
       searchParams.delete("type");
     } else {
       searchParams.set("type", option.codename);
-    }
-  };
-
-  const handleArticleTopicChange = (option: SelectorOption) => {
-    setArticleTopic(option.label);
-    if (option.label === "All") {
-      searchParams.delete("topic");
-    } else {
-      searchParams.set("topic", option.codename);
     }
   };
 
@@ -283,13 +270,11 @@ const ArticlesListingPage: React.FC = () => {
     return <div className="flex-grow" />;
   }
 
-  const featuredArticle = articles[0];
-
   return (
     <div className="flex flex-col">
-      <PageSection color="bg-creme">
+      <PageSection color="bg-mintGreen">
         <div className="flex flex-col-reverse gap-16 lg:gap-0 lg:flex-row items-center py-16 lg:py-0 lg:pt-[104px] lg:pb-[160px]">
-          <div className="flex flex-col flex-1 gap-6">
+          <div className="flex flex-col flex-1 gap-6 pr-20">
             <h1 className="text-heading-1 text-heading-1-color"
               {...createItemSmartLink(articlesListingPage.system.id)}
               {...createElementSmartLink("headline")}
@@ -331,7 +316,8 @@ const ArticlesListingPage: React.FC = () => {
 
       {featuredArticle && (
         <PageSection color="bg-white">
-          <FeaturedArticle
+          <FeaturedArticleVertical
+            key={featuredArticle.system.id}
             image={{
               url: featuredArticle.elements.image.value[0]?.url ?? "",
               alt: featuredArticle.elements.image.value[0]?.description ?? featuredArticle.elements.title.value,
@@ -340,7 +326,7 @@ const ArticlesListingPage: React.FC = () => {
             }}
             title={featuredArticle.elements.title.value}
             published={featuredArticle.elements.publish_date.value ?? ""}
-            tags={featuredArticle.elements.topics.value.map(t => t.name)}
+            tags={featuredArticle.elements.music_topics?.value?.map(t => t.name) || []}
             description={featuredArticle.elements.introduction.value}
             urlSlug={featuredArticle.elements.url_slug.value}
             itemId={featuredArticle.system.id}
@@ -363,44 +349,20 @@ const ArticlesListingPage: React.FC = () => {
               selectedOption={articleType}
               onChange={handleArticleTypeChange}
             />
-            <Selector
-              label="Topic"
-              options={[
-                { label: "All", codename: "" },
-                ...articleTopics.terms.map((t: ITaxonomyTerms) => ({
-                  label: t.name,
-                  codename: t.codename,
-                })),
-              ]}
-              selectedOption={articleTopic}
-              onChange={handleArticleTopicChange}
-            />
           </div>
           <ArticleList
-            articles={articles.filter(a =>
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              isArticleType(articleTypeCodename)
-                ? a.elements.article_type.value[0]?.codename === articleTypeCodename
-                : true
-            )
-              .filter(a =>
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                isAustralianMuseumTopics(articleTopicCodename)
-                  ? a.elements.topics.value.find(t => t.codename === articleTopicCodename)
-                  : true
-              )
-              .map(article => ({
-                image: {
-                  url: article.elements.image.value[0]?.url ?? "",
-                  alt: article.elements.image.value[0]?.description ?? article.elements.title.value,
-                },
-                title: article.elements.title.value,
-                introduction: article.elements.introduction.value,
-                publishDate: article.elements.publish_date.value ?? "",
-                topics: article.elements.topics.value.map(term => term.name),
-                urlSlug: article.elements.url_slug.value,
-                itemId: article.system.id,
-              }))}
+            articles={articles.map(article => ({
+              image: {
+                url: article.elements.image.value[0]?.url ?? "",
+                alt: article.elements.image.value[0]?.description ?? article.elements.title.value,
+              },
+              title: article.elements.title.value,
+              introduction: article.elements.introduction.value,
+              publishDate: article.elements.publish_date.value ?? "",
+              topics: article.elements.music_topics?.value?.map(term => term.name) || [],
+              urlSlug: article.elements.url_slug.value,
+              itemId: article.system.id,
+            }))}
           />
         </div>
       </PageSection>

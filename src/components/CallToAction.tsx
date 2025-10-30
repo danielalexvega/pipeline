@@ -10,7 +10,7 @@ type CallToActionProps = Readonly<{
   imageSrc?: string;
   imageAlt: string;
   imagePosition?: "left" | "right" | "center";
-  style?: "burgundy" | "default";
+  style?: "mintGreen" | "white";
   componentId: string;
   componentName: string;
 }>;
@@ -23,7 +23,7 @@ const CallToActionComponent: React.FC<CallToActionProps> = ({
   imageSrc,
   imageAlt,
   imagePosition = "left",
-  style = "default",
+  style,
   componentId,
   componentName,
 }) => {
@@ -38,7 +38,7 @@ const CallToActionComponent: React.FC<CallToActionProps> = ({
 
   return (
     <div
-      className={`${style === "burgundy" ? "burgundy-theme" : ""} w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] px-4 lg:px-8 xl:px-16`}
+      className={`${style === "mintGreen" ? "mintGreen-theme" : ""} w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] px-4 lg:px-8 xl:px-16`}
       {...createItemSmartLink(componentId, componentName)}
     >
       <div className="max-w-7xl mx-auto">

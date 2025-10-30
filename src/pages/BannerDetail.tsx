@@ -123,6 +123,7 @@ const BannerDetail: FC = () => {
           imageSrc={banner.elements.image?.value[0]?.url}
           imageAlt={banner.elements.image?.value[0]?.description ?? "alt"}
           imagePosition={banner.elements.image_position?.value[0]?.codename ?? "left"}
+          style={banner.elements.style?.value[0]?.codename === "mint_green" ? "mintGreen" : "white"}
           componentId={banner.system.id}
           componentName={banner.system.name}
         />

@@ -38,10 +38,10 @@ const HeroImageAuthorCard: React.FC<{
       <img src={image.url} alt={image.alt} className="w-[50px] h-[50px] object-cover rounded-full" />
       <div className="flex flex-col">
         <div className="flex items-center">
-          <span className="text-white text-body-md">{language === "es-ES" ? "Por" : "By"}&nbsp;</span>
+          <span className="text-black text-body-md border-b-[2px] border-mintGreen">{language === "es-ES" ? "Por" : "By"}&nbsp;</span>
           <NavLink
             to={createPreviewLink(`/our-team/${codename}`, isPreview)}
-            className="text-white text-body-md font-bold hover:text-burgundy underline"
+            className="text-black text-body-md hover:text-darkGreen border-mintGreen hover:border-black border-b-[2px] transition-all duration-300"
           >
             {prefix && <span>{prefix}</span>}
             {firstName} {lastName}
@@ -49,7 +49,7 @@ const HeroImageAuthorCard: React.FC<{
           </NavLink>
         </div>
         {publishDate && (
-          <p className="text-body-md text-white">
+          <p className="text-body-md text-black">
             {language === "es-ES" ? "Publicado en" : "Published on"} {publishDate}
           </p>
         )}
@@ -135,9 +135,9 @@ const ArticleDetailPage: React.FC = () => {
 
   // Track topic interests when article loads
   useEffect(() => {
-    if (article && article.elements.topics.value.length > 0) {
+    if (article && article.elements.music_topics?.value?.length > 0) {
 
-        const topics = article.elements.topics.value.map(topic => ({
+        const topics = article.elements.music_topics.value.map(topic => ({
           name: topic.name,
           codename: topic.codename
         }));
@@ -168,13 +168,13 @@ const ArticleDetailPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-12">
-      <PageSection color="bg-azure">
-        <div className="azure-theme flex flex-col-reverse gap-16 lg:flex-row items-center pt-[104px] pb-[160px]">
+      <PageSection color="bg-mintGreen">
+        <div className="mintGreen-theme flex flex-col-reverse gap-16 lg:flex-row items-center pt-[104px] pb-[160px]">
           <div className="flex flex-col flex-1 gap-6">
-            <div className="w-fit text-xs text-body-color border tracking-wider font-[700] border-tag-border-color px-4 py-2 rounded-lg uppercase">
+            <div className="w-fit text-xs text-black border tracking-wider font-[700] border-black px-4 py-2 rounded-lg uppercase bg-white">
               {article.system.language === "es-ES" ? "Artículo" : "Article"}
             </div>
-            <h1 className="text-heading-1 leading-[84%] text-heading-1-color"
+            <h1 className="text-heading-1 leading-[84%] text-black"
             {...createItemSmartLink(article.system.id)}
             {...createElementSmartLink("title")}
             >
@@ -195,13 +195,13 @@ const ArticleDetailPage: React.FC = () => {
                 language={article.system.language}
               />
             )}
-            {article.elements.topics.value.length > 0 && article.system.language === "default" && (
+            {article.elements.music_topics?.value?.length > 0 && article.system.language === "default" && (
               <Tags
-                tags={article.elements.topics.value.map(topic => topic.name)}
+                tags={article.elements.music_topics.value.map(topic => topic.name)}
                 orientation="horizontal"
-                className="mt-4"
+                className="mt-4 text-black"
                 itemId={article.system.id}
-                elementCodename="topics"
+                elementCodename="music_topics"
               />
             )}
           </div>
@@ -211,14 +211,14 @@ const ArticleDetailPage: React.FC = () => {
               height={440}
               src={article.elements.image.value[0]?.url ?? ""}
               alt={article.elements.image.value[0]?.description ?? ""}
-              className="rounded-lg w-[670px] h-[440px] object-cover"
+              className="rounded-md w-[670px] h-[440px] object-cover border-[5px] border-black"
             />
           </div>
         </div>
       </PageSection>
 
       <PageSection color="bg-white">
-        <div className="flex flex-col gap-12 mx-auto items-center max-w-fit">
+        <div className="flex flex-col gap-12 mx-auto items-center max-w-fit mt-20">
           <p className="text-body-xl text-body-color font-[600] w-[728px] max-w-[728px]"
           {...createItemSmartLink(article.system.id)}
           {...createElementSmartLink("introduction")}
@@ -229,7 +229,7 @@ const ArticleDetailPage: React.FC = () => {
           {...createItemSmartLink(article.system.id)}
           {...createElementSmartLink("body_copy")}
           >
-            <PageContent body={article.elements.body_copy!} itemId={article.system.id} elementName="body_copy" />
+            <PageContent body={article.elements.body_copy!} itemId={article.system.id} elementName="body_copy" isPreview={isPreview} />
           </div>
         </div>
       </PageSection>
@@ -273,7 +273,7 @@ const ArticleDetailPage: React.FC = () => {
                 urlSlug: article.elements.url_slug.value,
                 introduction: article.elements.introduction.value,
                 publishDate: article.elements.publish_date.value ?? "",
-                topics: article.elements.topics.value.map(topic => topic.name),
+                topics: article.elements.music_topics?.value?.map(topic => topic.name) || [],
                 itemId: article.system.id,
               }))}
             />

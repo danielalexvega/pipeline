@@ -121,7 +121,7 @@ const LandingPage: FC = () => {
 
   return (
     <div className="flex-grow">
-      <PageSection color="bg-burgundy">
+      <PageSection color="bg-mintGreen">
         <HeroImage
           data={{
             headline: landingPage.elements.headline,
@@ -132,9 +132,12 @@ const LandingPage: FC = () => {
         />
       </PageSection>
       <PageSection color="bg-white">
-        <PageContent body={landingPage.elements.body_copy!} itemId={landingPage.system.id} elementName="body_copy" />
+        <PageContent body={landingPage.elements.body_copy!} itemId={landingPage.system.id} elementName="body_copy" isPreview={isPreview} />
       </PageSection>
-      <FeaturedContent featuredContent={landingPage.elements.featured_content!} parentId={landingPage.system.id}></FeaturedContent>
+      <PageSection color="bg-white flex flex-row">
+        <FeaturedContent featuredContent={landingPage.elements.featured_content!} parentId={landingPage.system.id}></FeaturedContent>
+
+      </PageSection>
     </div>
   );
 };

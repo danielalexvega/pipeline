@@ -1,11 +1,12 @@
 import { FC } from "react";
-import { CallToAction, Disclaimer, FormHubspotIntegration, ReusableContentBlock, Video } from "../model";
+import { CallToAction, Disclaimer, FormHubspotIntegration, ReusableContentBlock, Video, ABCTA } from "../model";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../utils/richtext";
 import { PortableText, PortableTextReactResolvers } from "@kontent-ai/rich-text-resolver/utils/react";
 import PromotionalDisclaimer from "./disclaimer/PromotionalDisclaimer";
 import InformationalDisclaimer from "./disclaimer/InformationalDisclaimer";
 import CallToActionComponent from "./CallToAction";
+import ABCTAComponent from "./ABCTA";
 import { createElementSmartLink, createFixedAddSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { Elements, IContentItem } from "@kontent-ai/delivery-sdk";
 import VideoComponent from "./Video";
@@ -15,9 +16,10 @@ type PageContentProps = {
   body: Elements.RichTextElement;
   itemId: string;
   elementName: string;
+  isPreview?: boolean;
 };
 
-const PageContent: FC<PageContentProps> = ({ body, itemId, elementName }) => {
+const PageContent: FC<PageContentProps> = ({ body, itemId, elementName, isPreview = false }) => {
   const value = !body || !body.value ? "<p><br/></p>" : body.value;
   const portableText = transformToPortableText(value);
   return (
@@ -28,13 +30,14 @@ const PageContent: FC<PageContentProps> = ({ body, itemId, elementName }) => {
       )}
       {...createFixedAddSmartLink("end", "bottom")}
     >
-      <PortableText value={portableText} components={createPortableTextComponents(body)} />
+      <PortableText value={portableText} components={createPortableTextComponents(body, isPreview)} />
     </div>
   );
 };
 
 const createPortableTextComponents = (
   element: Elements.RichTextElement,
+  isPreview: boolean = false,
 ): PortableTextReactResolvers => ({
   ...defaultPortableRichTextResolvers,
   types: {
@@ -58,6 +61,7 @@ const createPortableTextComponents = (
             body={content.elements.content}
             itemId={content.system.id}
             elementName="content"
+            isPreview={isPreview}
           />;
         case "call_to_action":
           const cta = item as CallToAction;
@@ -70,6 +74,7 @@ const createPortableTextComponents = (
               imageSrc={cta.elements.image.value[0]?.url}
               imageAlt={cta.elements.image.value[0]?.description ?? "alt"}
               imagePosition={cta.elements.image_position.value[0]?.codename ?? "left"}
+              style={cta.elements.style?.value[0]?.codename === "mint_green" ? "mintGreen" : "white"}
               componentId={cta.system.id}
               componentName={cta.system.name}
             />
@@ -77,6 +82,13 @@ const createPortableTextComponents = (
         case "form__hubspot_integration":
           return (
             <HubSpotFormComponent item={item as FormHubspotIntegration} />
+          );
+        case "a_b_cta":
+          return (
+            <ABCTAComponent 
+              abCta={item as ABCTA} 
+              isPreview={isPreview} 
+            />
           );
         default:
           return (

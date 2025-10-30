@@ -1,5 +1,4 @@
 import React from "react";
-import FeaturedComponentBase from "./FeaturedComponentBase";
 import Tags from "../Tags";
 import Link from "../Link";
 import { createItemSmartLink } from "../../utils/smartlink";
@@ -20,24 +19,38 @@ type FeaturedArticleProps = Readonly<{
   urlSlug: string;
 }>;
 
-const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ article, displayFeatured = false, urlSlug }) => {
+const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ article, urlSlug }) => {
   return (
-    <FeaturedComponentBase
-      type="article"
-      image={{
-        url: article.image.url,
-        alt: article.image.alt,
-      }}
-      displayFeatured={displayFeatured}
-    >
-      <>
+    <div className="flex flex-col h-full bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+      {/* Image */}
+      <div className="relative">
+        {/* {displayFeatured && (
+          <span className="absolute top-4 left-4 px-3.5 py-1.5 text-body-xs bg-azure text-white rounded-md font-bold z-10">
+            FEATURED ARTICLE
+          </span>
+        )} */}
+        <img
+          width={300}
+          height={200}
+          src={article.image.url ? `${article.image.url}?auto=format&w=600` : ""}
+          alt={article.image.alt ?? "image alt"}
+          className="w-full h-48 object-cover"
+        />
+      </div>
+      
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-6">
         <div
-        {...createItemSmartLink(article.itemId)}
+          {...createItemSmartLink(article.itemId)}
+          className="flex flex-col flex-1"
         >
-          <h2 className="text-center lg:text-left text-heading-2 font-semibold text-burgundy">
+          {/* Title */}
+          <h3 className="text-heading-4 font-semibold text-black mb-3 line-clamp-2">
             {article.title}
-          </h2>
-          <p className="text-center lg:text-left text-gray-light mt-6 text-body-md">
+          </h3>
+          
+          {/* Published Date */}
+          <p className="text-gray-light text-body-sm mb-3">
             {article.publishDate
               && `Published on ${
                 new Date(article.publishDate).toLocaleDateString("en-US", {
@@ -47,17 +60,29 @@ const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ article, displayFeatu
                 })
               }`}
           </p>
-          <Tags
-            tags={article.topics}
-            className="mt-4"
-          />
-          <p className="text-left text-gray-700 mt-4 text-body-lg">
+          
+          {/* Topics */}
+          {article.topics.length > 0 && (
+            <div className="mb-4">
+              <Tags
+                tags={article.topics}
+                className="flex-wrap"
+              />
+            </div>
+          )}
+          
+          {/* Introduction */}
+          <p className="text-gray-700 text-body-sm mb-4 flex-1 line-clamp-3">
             {article.introduction}
           </p>
         </div>
-        <Link href={urlSlug} text="Read more" className="mt-6" />
-      </>
-    </FeaturedComponentBase>
+        
+        {/* Read More Link */}
+        <div className="mt-auto test">
+          <Link href={urlSlug} text="Read more" className="text-azure hover:text-burgundy font-medium" />
+        </div>
+      </div>
+    </div>
   );
 };
 

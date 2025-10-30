@@ -6,9 +6,9 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: 🏛️ Australian Museum
+* Project: 🧔🏻 Personalization Example
 * Environment: Production
-* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
+* Id: c4aa2909-21c3-026b-85f1-89cb4ae991ca
 * 
 * -------------------------------------------------------------------------------
 **/
@@ -80,6 +80,15 @@ export type CallToAction = CoreContentType<
      * Id: 1872121b-6166-451e-8c26-9c78f2cfba47
      */
     readonly button_link: Elements.LinkedItemsElement<Page>;
+    /**
+     * Style
+     *
+     * Type: multiple_choice
+     * Required: false
+     * Codename: style
+     * Id: 6b1987fe-3471-4e69-9bb3-f32bdfbd18c5
+     */
+    readonly style: Elements.MultipleChoiceElement<"white" | "mint_green">;
   },
   "call_to_action"
 >;
@@ -93,7 +102,8 @@ export type CallToActionElementCodenames =
   | "image"
   | "image_position"
   | "button_label"
-  | "button_link";
+  | "button_link"
+  | "style";
 
 /**
  * Type guard for Call to action

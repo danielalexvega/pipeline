@@ -122,7 +122,7 @@ const Page: FC = () => {
     <div className="flex-grow">
       {
         page.elements.headline?.value && (
-          <PageSection color="bg-burgundy">
+          <PageSection color="bg-mintGreen">
             <HeroImage
               data={{
                 headline: page.elements.headline,
@@ -136,7 +136,7 @@ const Page: FC = () => {
         )
       }
       <PageSection color="bg-white">
-        <PageContent body={page.elements.body!} itemId={page.system.id} elementName="body" />
+        <PageContent body={page.elements.body!} itemId={page.system.id} elementName="body" isPreview={isPreview} />
       </PageSection>
     </div>
   );

@@ -6,9 +6,9 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: 🏛️ Australian Museum
+* Project: 🧔🏻 Personalization Example
 * Environment: Production
-* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
+* Id: c4aa2909-21c3-026b-85f1-89cb4ae991ca
 * 
 * -------------------------------------------------------------------------------
 **/
@@ -16,7 +16,7 @@
 import type { Elements } from "@kontent-ai/delivery-sdk";
 import type { CoreContentType } from "../system/index.ts";
 import type { Metadata } from "../content-type-snippets/index.ts";
-import type { Video, Disclaimer, CallToAction } from "./index.ts";
+import type { Video, Disclaimer, CallToAction, FormHubspotIntegration, ReusableContentBlock } from "./index.ts";
 
 /**
  * Page
@@ -62,7 +62,9 @@ export type Page = CoreContentType<
      * Codename: body
      * Id: c5ac868e-97fe-419a-a256-635af1fb70aa
      */
-    readonly body: Elements.RichTextElement<Video | Disclaimer | CallToAction>;
+    readonly body: Elements.RichTextElement<
+      Video | Disclaimer | CallToAction | FormHubspotIntegration | ReusableContentBlock
+    >;
     /**
      * URL
      *

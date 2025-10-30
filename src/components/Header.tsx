@@ -14,7 +14,7 @@ const Header: React.FC = () => {
 
   return (
     <Container>
-      <div className="py-8 flex flex-col gap-8 xl:gap-0 lg:flex-row items-center justify-between">
+      <div className="py-8 flex flex-col gap-8 xl:gap-0 lg:flex-row items-center justify-between bg-darkGreen">
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-12 xl:gap-32 items-center list-none">
           <Logo />
           <Navigation />

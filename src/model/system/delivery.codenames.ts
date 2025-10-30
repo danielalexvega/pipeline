@@ -6,9 +6,9 @@
 *  
 * -------------------------------------------------------------------------------
 * 
-* Project: 🏛️ Australian Museum
+* Project: 🧔🏻 Personalization Example
 * Environment: Production
-* Id: ab00c5f7-85bf-02cf-55e1-a3d020897258
+* Id: c4aa2909-21c3-026b-85f1-89cb4ae991ca
 * 
 * -------------------------------------------------------------------------------
 **/
@@ -16,14 +16,16 @@
 /**
  * Type representing all languages
  */
-export type LanguageCodenames = "de-DE" | "default" | "es-ES";
+export type LanguageCodenames = "de-DE" | "default" | "English_-_Students" | "English_Students" | "es-ES";
 
 /**
  * Type representing all content types
  */
 export type ContentTypeCodenames =
+  | "a_b_cta"
   | "article"
   | "blog_post"
+  | "bynder_image"
   | "call_to_action"
   | "disclaimer"
   | "event"
@@ -57,10 +59,13 @@ export type WorkflowCodenames = "academic_resources" | "biographies" | "default"
 export type TaxonomyCodenames =
   | "article_type"
   | "australian_museum_topics"
+  | "channel"
   | "event_topic"
   | "event_type"
   | "general_healthcare_topics"
-  | "medical_specialties";
+  | "medical_specialties"
+  | "music_articles"
+  | "personas";
 
 /**
  * Type representing all worksflow steps across all workflows
@@ -86,8 +91,6 @@ export type WorkflowStepCodenames =
  * Type representing all element codenames across all content types
  */
 export type ElementCodenames =
-  | "accessibility_checker"
-  | "article_type"
   | "australian_museum_topics"
   | "author"
   | "autoplay"
@@ -96,9 +99,13 @@ export type ElementCodenames =
   | "body"
   | "button_label"
   | "button_link"
+  | "bynder_asset"
   | "caption"
+  | "channel"
   | "cloudinary_integration"
   | "content"
+  | "cta_a"
+  | "cta_b"
   | "description"
   | "email"
   | "end_date"
@@ -115,27 +122,31 @@ export type ElementCodenames =
   | "introduction"
   | "job_title"
   | "last_name"
+  | "linkedin"
   | "medical_specialties"
   | "metadata__description"
   | "metadata__keywords"
   | "metadata__title"
   | "metadata"
+  | "music_topics"
   | "name"
+  | "personas"
   | "phone"
   | "pim_integration_e_g__shopify"
   | "prefix"
   | "publish_date"
   | "related_articles"
   | "start_date"
+  | "style"
   | "subheadline"
   | "subpages"
   | "suffixes"
   | "summary"
   | "team"
   | "title"
-  | "topics"
   | "type"
   | "url_slug"
   | "url"
   | "video_link"
-  | "website";
+  | "website"
+  | "x";

@@ -9,7 +9,7 @@ import PersonalizationDebug from "./PersonalizationDebug";
 const Layout: FC<PropsWithChildren> = () => (
   <AppContextComponent>
     <SmartLinkContextComponent>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-darkGreen">
         <ScrollRestoration getKey={location => location.pathname} />
         <Header />
         <Outlet />

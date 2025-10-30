@@ -31,7 +31,7 @@ export const defaultPortableRichTextResolvers = {
     h3: ({ children }) => <h3 className="text-heading-3 text-heading-3-color leading-[130%] w-full py-5">{children}</h3>,
     h4: ({ children }) => <h4 className="text-heading-4 text-heading-4-color leading-[130%] w-full py-5">{children}</h4>,
 
-    normal: ({ children }) => <p className="text-body-lg text-body-color w-full pb-5">{children}</p>,
+    normal: ({ children }) => <p className="text-body-lg text-body-color w-full pb-5 pt-5">{children}</p>,
   },
 } as const satisfies PortableTextReactResolvers;
 

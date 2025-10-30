@@ -18,6 +18,7 @@ import Loader from "./components/Loader.tsx";
 import Page from "./pages/Page.tsx";
 import OurShopPage from "./pages/ShopPage.tsx";
 import ProductDetailPage from "./pages/ProductDetailPage.tsx";
+import PersonalTastePage from "./pages/PersonalTastePage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,10 @@ const BaseRouting: RouteObject[] = [
   {
     path: "shop",
     Component: OurShopPage,
+  },
+  {
+    path: "personal-taste",
+    Component: PersonalTastePage,
   },
   {
     path: "shop/:slug",

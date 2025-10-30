@@ -1,7 +1,5 @@
 import React from "react";
 import FeaturedArticle from "../landingPage/FeaturedArticle";
-import Divider from "../Divider";
-import PageSection from "../PageSection";
 
 // Define the ArticleData type with a flattened structure
 type ArticleData = Readonly<{
@@ -23,12 +21,12 @@ type ArticleListProps = Readonly<{
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
   return (
-    <div className="flex flex-col items-center">
+    <div className="w-full">
       {articles.length === 0
         ? <p className="text-center text-grey text-body-xl">No articles available</p>
-        : (articles.map((article, index) => (
-          <div key={article.urlSlug}>
-            <PageSection color="bg-white">
+        : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {articles.map((article) => (
               <FeaturedArticle
                 key={article.urlSlug}
                 article={{
@@ -41,10 +39,9 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
                 }}
                 urlSlug={article.urlSlug}
               />
-            </PageSection>
-            {index !== articles.length - 1 && <Divider />}
+            ))}
           </div>
-        )))}
+        )}
     </div>
   );
 };
