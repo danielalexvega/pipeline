@@ -100,28 +100,7 @@ const ABCTAComponent: React.FC<ABCTAProps> = ({ abCta, isPreview = false }) => {
       {/* Render Selected CTA */}
       {isInitialized && renderCTA(currentCta, selectedCta)}
 
-      {/* Preview Mode: Show Both CTAs Side by Side */}
-      {isPreview && (
-        <div className="mt-8">
-          <h4 className="text-lg font-semibold text-gray-900 mb-4">
-            Both Variants (Preview Only)
-          </h4>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-                <h5 className="font-semibold text-green-800">CTA A</h5>
-              </div>
-              {renderCTA(ctaA, "A")}
-            </div>
-            <div>
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4">
-                <h5 className="font-semibold text-purple-800">CTA B</h5>
-              </div>
-              {renderCTA(ctaB, "B")}
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };
