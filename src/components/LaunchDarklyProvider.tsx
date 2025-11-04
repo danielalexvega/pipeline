@@ -21,9 +21,20 @@ const LaunchDarklyInit: FC = () => {
       };
 
       // Use waitUntilReady() which resolves immediately if already ready
-      ldClient.waitUntilReady().then(handleReady).catch((error) => {
-        console.error("LaunchDarkly SDK initialization error:", error);
+      let isCancelled = false;
+      ldClient.waitUntilReady().then(() => {
+        if (!isCancelled) {
+          handleReady();
+        }
+      }).catch((error) => {
+        if (!isCancelled) {
+          console.error("LaunchDarkly SDK initialization error:", error);
+        }
       });
+
+      return () => {
+        isCancelled = true;
+      };
     }
   }, [ldClient]);
 
