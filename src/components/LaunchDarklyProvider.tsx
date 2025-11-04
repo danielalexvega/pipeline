@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { LDProvider, useLDClient } from "launchdarkly-react-client-sdk";
 
 const LaunchDarklyInit: FC = () => {
@@ -20,15 +20,10 @@ const LaunchDarklyInit: FC = () => {
         console.log("LaunchDarkly SDK initialized and tracking event sent");
       };
 
-      if (ldClient.isInitialized()) {
-        handleReady();
-      } else {
-        // Listen for ready event
-        ldClient.on('ready', handleReady);
-        return () => {
-          ldClient.off('ready', handleReady);
-        };
-      }
+      // Use waitUntilReady() which resolves immediately if already ready
+      ldClient.waitUntilReady().then(handleReady).catch((error) => {
+        console.error("LaunchDarkly SDK initialization error:", error);
+      });
     }
   }, [ldClient]);
 
