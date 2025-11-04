@@ -45,7 +45,7 @@ const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ article, urlSlug }) =
           className="flex flex-col flex-1"
         >
           {/* Title */}
-          <h3 className="text-heading-4 font-semibold text-black mb-3 line-clamp-2">
+          <h3 className="text-heading-4 font-semibold text-black mb-3 line-clamp-2 leading-[120%]">
             {article.title}
           </h3>
           
