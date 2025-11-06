@@ -6,10 +6,11 @@ import {
   getPersonalizedRecommendations,
   calculatePersonalizationScore 
 } from "../../utils/personalization";
-
+import { useTheme } from "../../context/ThemeContext";
 interface PersonalTasteListProps {
   articles: Article[];
 }
+
 
 // Get article topics from the actual CMS taxonomy field (music_topics)
 const getArticleTopics = (article: Article): string[] => {
@@ -21,7 +22,8 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
 }) => {
   const [showPersonalized, setShowPersonalized] = useState(true);
   const userProfile = getUserInterestProfile();
-  
+  const { isDarkMode } = useTheme();
+
   const { personalizedArticles, allArticles } = useMemo(() => {
     if (!userProfile.hasInterests) {
       return { personalizedArticles: [], allArticles: articles };
@@ -45,17 +47,17 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
     <div className="flex flex-col gap-6">
       {/* Personalization Controls */}
       {userProfile.hasInterests && (
-        <div className="bg-white rounded-lg p-4 border-[2px] border-darkGreen mt-10">
+        <div className={`${isDarkMode ? "bg-black border-white" : "bg-white border-darkGreen"} rounded-lg p-4 border-[2px] mt-10`}>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex flex-col">
-              <h3 className="text-2xl font-semibold text-black uppercase font-lexend">
+              <h3 className={`text-2xl font-semibold ${isDarkMode ? "text-white" : "text-black"} uppercase font-lexend`}>
                 🎵 Your Personal Taste
               </h3>
-              <p className="text-base text-black mt-1">
+              <p className={`text-base ${isDarkMode ? "text-white" : "text-black" } mt-1`}>
                 Based on your interests: {userProfile.topInterests.slice(0, 3).map(t => t.topicName).join(', ')}
                 {userProfile.topInterests.length > 3 && ` +${userProfile.topInterests.length - 3} more`}
               </p>
-              <p className="text-base text-black mt-1">
+              <p className={`text-base ${isDarkMode ? "text-white" : "text-black" } mt-1`}>
                 {userProfile.totalVisits} articles read across {userProfile.totalTopics} topics
               </p>
             </div>
@@ -64,8 +66,8 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
                 onClick={() => setShowPersonalized(false)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   !showPersonalized 
-                    ? 'bg-darkGreen text-white' 
-                    : 'bg-white text-darkGreen border border-darkGreen hover:bg-mintGreen'
+                    ? `${isDarkMode ? "bg-white text-black" : "bg-darkGreen text-white"}` 
+                    : `${isDarkMode ? "bg-black text-white border border-white" : "bg-white text-darkGreen border border-darkGreen hover:bg-mintGreen"}`
                 }`}
               >
                 All Articles ({allArticles.length})
@@ -74,8 +76,8 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
                 onClick={() => setShowPersonalized(true)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   showPersonalized 
-                    ? 'bg-darkGreen text-white' 
-                    : 'bg-white text-darkGreen border border-darkGreen hover:bg-mintGreen'
+                    ? `${isDarkMode ? "bg-white text-black" : "bg-darkGreen text-white"}` 
+                    : `${isDarkMode ? "bg-black text-white border border-white" : "bg-white text-darkGreen border border-darkGreen hover:bg-mintGreen"}`
                 }`}
               >
                 For You ({personalizedArticles.length})

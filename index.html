@@ -10,6 +10,15 @@
     <link rel="icon" type="image/svg+xml" href="/favicon-32x32.png" />
     <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     <title>Music Makes the World Better</title>
+    <script>
+      // Prevent flash of wrong theme by applying dark mode class before page renders
+      (function() {
+        const theme = localStorage.getItem('pipeline-theme-preference');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark-mode');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

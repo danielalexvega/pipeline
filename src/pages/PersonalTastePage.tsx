@@ -15,6 +15,7 @@ import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink"
 import { Replace } from "../utils/types";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import PersonalTasteList from "../components/articles/PersonalTasteList";
+import { useTheme } from "../context/ThemeContext";
 
 const usePersonalTastePage = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
@@ -125,7 +126,7 @@ const PersonalTastePage: React.FC = () => {
   
   const personalTastePage = usePersonalTastePage(isPreview, lang);  
   const articles = useArticles(isPreview, lang);
-
+  const { isDarkMode } = useTheme();
   const [personalTastePageData] = useSuspenseQueries({
     queries: [
       {
@@ -168,7 +169,7 @@ const PersonalTastePage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-12">
-      <PageSection color="bg-mintGreen">
+      <PageSection color={isDarkMode ? "bg-black" : "bg-mintGreen"}>
         <div className="flex flex-col-reverse gap-16 lg:gap-0 lg:flex-row items-center py-16 lg:py-0 lg:pt-[104px] lg:pb-[160px]">
           <div className="flex flex-col flex-1 gap-6 lg:pr-20">
             <h1 className="text-heading-1 text-heading-1-color"
@@ -196,7 +197,7 @@ const PersonalTastePage: React.FC = () => {
         </div>
       </PageSection>
 
-      <PageSection color="bg-white">
+      <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
         <PersonalTasteList articles={articles} />
       </PageSection>
 

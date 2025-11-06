@@ -4,6 +4,7 @@ import FeaturedArticle from "./FeaturedArticle";
 import FeaturedEvent from "./FeaturedEvent";
 import CallToAction from "../CallToAction";
 import { createElementSmartLink, createFixedAddSmartLink, createItemSmartLink } from "../../utils/smartlink";
+import { useTheme } from "../../context/ThemeContext";
 
 type FeaturedContentProps = {
   featuredContent: LandingPage["elements"]["featured_content"];
@@ -11,6 +12,8 @@ type FeaturedContentProps = {
 };
 
 const FeaturedContent: FC<FeaturedContentProps> = ({ featuredContent, parentId }) => {
+  const { isDarkMode } = useTheme();
+
   const linkedItems = featuredContent.linkedItems.map(
     (item) => {
       if (isArticle(item)) {
@@ -43,7 +46,7 @@ const FeaturedContent: FC<FeaturedContentProps> = ({ featuredContent, parentId }
       }
 
       return (
-        <div key={item.system.codename} className="bg-mintGreen rounded-lg p-6">
+        <div key={item.system.codename} className={isDarkMode ? "bg-black rounded-lg p-6" : "bg-mintGreen rounded-lg p-6"}>
           <CallToAction
             title={item.elements.headline?.value}
             description={item.elements.subheadline?.value}

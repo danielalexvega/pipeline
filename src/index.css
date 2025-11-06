@@ -99,6 +99,40 @@ h1, h2, h3 {
   --color-text: var(--color-gray);
 }
 
+.dark-mode {
+  --color-background: var(--color-black);
+  
+  --color-heading-1: var(--color-white);
+  --color-heading-2: var(--color-white);
+  --color-heading-3: var(--color-white);
+  --color-heading-4: var(--color-white);
+  
+  --color-body-large: var(--color-grey-light);
+  --color-body: var(--color-grey-light);
+  --color-small: var(--color-grey-light);
+  
+  --color-border: var(--color-grey-light);
+  --color-link: var(--color-azure);
+  --color-link-hover: var(--color-gold);
+  
+  --color-button-background: transparent;
+  --color-button-background-hover: var(--color-white);
+  --color-button-border: var(--color-white);
+  --color-button-border-hover: var(--color-white);
+  --color-button-text: var(--color-white);
+  --color-button-text-hover: var(--color-grey-dark);
+  
+  --color-tag-border: var(--color-white);
+  --color-tag-text: var(--color-white);
+  
+  background-color: var(--color-black);
+  color: var(--color-grey-light);
+}
+
+.dark-mode .bg-darkGreen {
+  background-color: var(--color-black) !important;
+}
+
 .button-mintGreen {
   --color-button-background: var(--color-darkGreen);
   --color-button-background-hover: var(--color-white);

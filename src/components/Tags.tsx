@@ -1,19 +1,23 @@
 import { FC } from "react";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
-
+import { useTheme } from "../context/ThemeContext";
 type TagProps = Readonly<{
   text: string;
   className?: string;
 }>;
 
-const Tag: FC<TagProps> = ({ text, className = "" }) => (
-  <div
-    key={text}
-    className={`w-fit px-4 py-2 border-solid border rounded-full border-tag-border-color bg-white ${className}`}
-  >
-    <p className="text-tag-text-color text-body-xs uppercase font-[600]">{text}</p>
-  </div>
-);
+const Tag: FC<TagProps> = ({ text, className = "" }) => {
+  const { isDarkMode } = useTheme();
+
+  return (
+    <div
+      key={text}
+      className={`w-fit px-4 py-2 border-solid border rounded-full border-tag-border-color ${isDarkMode ? "bg-black" : "bg-white"} ${className}`}
+    >
+      <p className="text-tag-text-color text-body-xs uppercase font-[600]">{text}</p>
+    </div>
+  );
+};
 
 type TagsProps = Readonly<{
   tags: ReadonlyArray<string>;

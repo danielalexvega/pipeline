@@ -8,6 +8,7 @@ import { LanguageCodenames, type LandingPage } from "../model";
 import { createClient } from "../utils/client";
 import { FC, useCallback, useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
+import { useTheme } from "../context/ThemeContext";
 import { Replace } from "../utils/types";
 import FeaturedContent from "../components/landingPage/FeaturedContent";
 import { useSearchParams } from "react-router-dom";
@@ -71,6 +72,7 @@ const useLandingPage = (isPreview: boolean, lang: string | null) => {
 
 const LandingPage: FC = () => {
   const { environmentId, apiKey, collection } = useAppContext();
+  const { isDarkMode } = useTheme();
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
   const lang = searchParams.get("lang");
@@ -121,7 +123,7 @@ const LandingPage: FC = () => {
 
   return (
     <div className="flex-grow">
-      <PageSection color="bg-mintGreen">
+      <PageSection color={isDarkMode ? "bg-black" : "bg-mintGreen"}>
         <HeroImage
           data={{
             headline: landingPage.elements.headline,
@@ -131,10 +133,10 @@ const LandingPage: FC = () => {
           }}
         />
       </PageSection>
-      <PageSection color="bg-white">
+      <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
         <PageContent body={landingPage.elements.body_copy!} itemId={landingPage.system.id} elementName="body_copy" isPreview={isPreview} />
       </PageSection>
-      <PageSection color="bg-white flex flex-row">
+      <PageSection color={isDarkMode ? "bg-black flex flex-row" : "bg-white flex flex-row"}>
         <FeaturedContent featuredContent={landingPage.elements.featured_content!} parentId={landingPage.system.id}></FeaturedContent>
 
       </PageSection>

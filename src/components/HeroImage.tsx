@@ -2,6 +2,8 @@ import { Elements } from "@kontent-ai/delivery-sdk";
 import { FC } from "react";
 import ButtonLink from "./ButtonLink";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
+import { useTheme } from "../context/ThemeContext";
+
 
 type HeroImageProps = Readonly<{
   data: {
@@ -15,8 +17,10 @@ type HeroImageProps = Readonly<{
 }>;
 
 const HeroImage: FC<HeroImageProps> = ({ data, buttonLink }) => {
+  const { isDarkMode } = useTheme();
+
   return (
-    <div className="mintGreen-theme flex flex-col py-10 lg:py-0 lg:flex-row lg:gap-32">
+    <div className={isDarkMode ? "dark-mode flex flex-col py-10 lg:py-0 lg:flex-row lg:gap-32" : "mintGreen-theme flex flex-col py-10 lg:py-0 lg:flex-row lg:gap-32"}>
       <div className="lg:basis-1/2 pt-10 lg:pt-[104px] pb-10 lg:pb-[160px] flex flex-col items-center lg:items-start gap-10">
         <h1 className="text-center lg:text-left font-libre text-[64px] md:text-[94px] text-heading-1-color font-bold leading-[64px] md:leading-[78px]"
           {...createItemSmartLink(data.itemId)}

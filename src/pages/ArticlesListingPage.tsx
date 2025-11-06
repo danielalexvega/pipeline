@@ -18,6 +18,7 @@ import Tags from "../components/Tags";
 import ButtonLink from "../components/ButtonLink";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { Replace } from "../utils/types";
+import { useTheme } from "../context/ThemeContext";
 
 type FeaturedArticleProps = Readonly<{
   image: {
@@ -220,7 +221,7 @@ const ArticlesListingPage: React.FC = () => {
   const articleTypes = useArticleTypes(isPreview);
 
   const [articleType, setArticleType] = useState<string>("All");
-
+  const { isDarkMode } = useTheme();
 
   const handleArticleTypeChange = (option: SelectorOption) => {
     setArticleType(option.label);
@@ -273,7 +274,7 @@ const ArticlesListingPage: React.FC = () => {
 
   return (
     <div className="flex flex-col">
-      <PageSection color="bg-mintGreen">
+      <PageSection color={isDarkMode ? "bg-black" : "bg-mintGreen"}>
         <div className="flex flex-col-reverse gap-16 lg:gap-0 lg:flex-row items-center py-16 lg:py-0 lg:pt-[104px] lg:pb-[160px]">
           <div className="flex flex-col flex-1 gap-6 pr-20">
             <h1 className="text-heading-1 text-heading-1-color"
@@ -316,7 +317,7 @@ const ArticlesListingPage: React.FC = () => {
       )}
 
       {featuredArticle && (
-        <PageSection color="bg-white">
+        <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
           <FeaturedArticleVertical
             key={featuredArticle.system.id}
             image={{
@@ -335,7 +336,7 @@ const ArticlesListingPage: React.FC = () => {
         </PageSection>
       )}
 
-      <PageSection color="bg-white">
+      <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
         <div className="flex flex-col gap-8 pt-[104px] pb-[160px]">
           <div className="flex flex-col lg:flex-row gap-8">
             <Selector
