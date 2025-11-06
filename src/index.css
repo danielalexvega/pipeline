@@ -107,9 +107,9 @@ h1, h2, h3 {
   --color-heading-3: var(--color-white);
   --color-heading-4: var(--color-white);
   
-  --color-body-large: var(--color-grey-light);
-  --color-body: var(--color-grey-light);
-  --color-small: var(--color-grey-light);
+  --color-body-large: var(--color-white);
+  --color-body: var(--color-white);
+  --color-small: var(--color-white);
   
   --color-border: var(--color-grey-light);
   --color-link: var(--color-azure);

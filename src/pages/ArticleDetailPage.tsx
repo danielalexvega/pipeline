@@ -16,6 +16,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import PageContent from "../components/PageContent";
 import { trackArticleTopics } from "../utils/personalization";
+import { useTheme } from "../context/ThemeContext";
 
 const HeroImageAuthorCard: React.FC<{
   prefix?: string;
@@ -32,16 +33,17 @@ const HeroImageAuthorCard: React.FC<{
 }> = ({ prefix, firstName, lastName, suffix, publishDate, image, codename, language }) => {
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
+  const { isDarkMode } = useTheme();
 
   return (
     <div className="flex items-center gap-4">
       <img src={image.url} alt={image.alt} className="w-[50px] h-[50px] object-cover rounded-full" />
       <div className="flex flex-col">
         <div className="flex items-center">
-          <span className="text-black text-body-md border-b-[2px] border-mintGreen">{language === "es-ES" ? "Por" : "By"}&nbsp;</span>
+          <span className={`${isDarkMode ? "text-white border-black" : "text-black border-mintGreen"} text-body-md border-b-[2px]`}>{language === "es-ES" ? "Por" : "By"}&nbsp;</span>
           <NavLink
             to={createPreviewLink(`/our-team/${codename}`, isPreview)}
-            className="text-black text-body-md hover:text-darkGreen border-mintGreen hover:border-black border-b-[2px] transition-all duration-300"
+            className={`${isDarkMode ? "text-white hover:text-white border-black hover:border-white" : "text-black hover:text-darkGreen border-mintGreen hover:border-black" } text-body-md  border-b-[2px] transition-all duration-300`}
           >
             {prefix && <span>{prefix}</span>}
             {firstName} {lastName}
@@ -49,7 +51,7 @@ const HeroImageAuthorCard: React.FC<{
           </NavLink>
         </div>
         {publishDate && (
-          <p className="text-body-md text-black">
+          <p className={`${isDarkMode ? "text-white" : "text-black" } text-body-md`}>
             {language === "es-ES" ? "Publicado en" : "Published on"} {publishDate}
           </p>
         )}
@@ -65,6 +67,7 @@ const ArticleDetailPage: React.FC = () => {
   const isPreview = searchParams.get("preview") === "true";
   const lang = searchParams.get("lang");
   const queryClient = useQueryClient();
+  const { isDarkMode } = useTheme();
 
   const { data: article, refetch } = useQuery({
     queryKey: ["article-detail", slug, lang, isPreview],
@@ -168,13 +171,13 @@ const ArticleDetailPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-12">
-      <PageSection color="bg-mintGreen">
-        <div className="mintGreen-theme flex flex-col-reverse gap-16 lg:flex-row items-center pt-[104px] pb-[160px]">
+      <PageSection color={isDarkMode ? "bg-black" : "bg-mintGreen"}>
+        <div className={`${isDarkMode ? "dark-mode" : "mintGreen-theme"} flex flex-col-reverse gap-16 lg:flex-row items-center pt-[104px] pb-[160px]`}>
           <div className="flex flex-col flex-1 gap-6">
-            <div className="w-fit text-xs text-black border tracking-wider font-[700] border-black px-4 py-2 rounded-lg uppercase bg-white">
+            <div className={`${isDarkMode ? "text-white bg-black border-white":"text-black bg-white border-black"} w-fit text-xs border tracking-wider font-[700] px-4 py-2 rounded-lg uppercase`}>
               {article.system.language === "es-ES" ? "Artículo" : "Article"}
             </div>
-            <h1 className="text-heading-1 leading-[84%] text-black"
+            <h1 className={`${isDarkMode ? "text-white" : "text-black"} text-heading-1 leading-[84%]`}
             {...createItemSmartLink(article.system.id)}
             {...createElementSmartLink("title")}
             >
@@ -217,7 +220,7 @@ const ArticleDetailPage: React.FC = () => {
         </div>
       </PageSection>
 
-      <PageSection color="bg-white">
+      <PageSection color={`${ isDarkMode ? "bg-black": "bg-white"}`}>
         <div className="flex flex-col gap-12 mx-auto items-center max-w-fit mt-20">
           <p className="text-body-xl text-body-color font-[600] w-[728px] max-w-[728px]"
           {...createItemSmartLink(article.system.id)}
