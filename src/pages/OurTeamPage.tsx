@@ -15,6 +15,7 @@ import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { Replace } from "../utils/types";
 import { useSuspenseQueries } from "@tanstack/react-query";
+import { useTheme } from "../context/ThemeContext";
 
 const useTeamPage = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
@@ -125,6 +126,7 @@ const OurTeamPage: React.FC = () => {
 
   const teamPage = useTeamPage(isPreview, lang);  
   const teamMembers = useTeamMembers(isPreview, lang);  
+  const { isDarkMode } = useTheme();
 
   const [teamPageData] = useSuspenseQueries({
     queries: [
@@ -168,9 +170,9 @@ const OurTeamPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-12">
-      <PageSection color="bg-creme">
+      <PageSection color={`${ isDarkMode ? "bg-black":"bg-mintGreen"}`}>
         <div className="flex flex-col-reverse gap-16 lg:gap-0 lg:flex-row items-center py-16 lg:py-0 lg:pt-[104px] lg:pb-[160px]">
-          <div className="flex flex-col flex-1 gap-6">
+          <div className="flex flex-col flex-1 gap-6 mr-10">
             <h1 className="text-heading-1 text-heading-1-color"
               {...createItemSmartLink(teamPage.system.id)}
               {...createElementSmartLink("headline")}
@@ -197,7 +199,7 @@ const OurTeamPage: React.FC = () => {
       </PageSection>
 
       {!isEmptyRichText(teamPage.elements.body?.value ?? "") && (
-        <PageSection color="bg-white">
+        <PageSection color={`${ isDarkMode ? "bg-black":"bg-white"}`}>
           <div className="flex flex-col pt-10 mx-auto gap-6"
             {...createItemSmartLink(teamPage.system.id)}
             {...createElementSmartLink("body")}
@@ -210,7 +212,7 @@ const OurTeamPage: React.FC = () => {
         </PageSection>
       )}
 
-      <PageSection color="bg-white">
+      <PageSection color={`${ isDarkMode ? "bg-black":"bg-white"}`}>
         <div className="pb-[160px] pt-[104px]">
           <TeamMemberList
             teamMembers={teamMembers.map(member => ({

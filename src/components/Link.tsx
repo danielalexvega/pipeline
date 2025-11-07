@@ -14,7 +14,7 @@ const Link = ({ href, text, className = "" }: LinkProps) => {
   return (
     <NavLink
       to={createPreviewLink(href, isPreview)}
-      className={`inline-block text-link-color text-body-lg underline hover:text-link-hover-color ${className}`}
+      className={`inline-block text-medium ${className}`}
     >
       {text}
     </NavLink>

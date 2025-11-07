@@ -1,8 +1,9 @@
 import React from "react";
 import Tags from "../Tags";
-import Link from "../Link";
 import { createItemSmartLink } from "../../utils/smartlink";
 import { useTheme } from "../../context/ThemeContext";
+import { NavLink, useSearchParams } from "react-router-dom";
+import { createPreviewLink } from "../../utils/link";
 
 type FeaturedArticleProps = Readonly<{
   article: Readonly<{
@@ -22,9 +23,17 @@ type FeaturedArticleProps = Readonly<{
 
 const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ article, urlSlug }) => {
   const { isDarkMode } = useTheme();
+  const [searchParams] = useSearchParams();
+  const isPreview = searchParams.get("preview") === "true";
+  const articleHref = createPreviewLink(urlSlug, isPreview);
 
   return (
-    <div className={isDarkMode ? "flex flex-col h-full bg-black rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow" : "flex flex-col h-full bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"}>
+    <NavLink
+      to={articleHref}
+      className={isDarkMode
+        ? "flex flex-col h-full bg-black rounded-lg shadow-sm border border-2border-gray-200 overflow-hidden hover:shadow-lg hover:border-white transition-all hover:shadow-white"
+        : "flex flex-col h-full bg-white rounded-lg shadow-sm border border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all hover:shadow-(color:darkGreen) hover:border-black hover:border-2"}
+    >
       {/* Image */}
       <div className="relative">
         {/* {displayFeatured && (
@@ -81,11 +90,11 @@ const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ article, urlSlug }) =
         </div>
         
         {/* Read More Link */}
-        <div className="mt-auto test">
-          <Link href={urlSlug} text="Read more" className="text-azure hover:text-burgundy font-medium" />
+        <div className={`mt-auto text-sm font-medium uppercase ${isDarkMode ? "text-white" : "text-black"}`}>
+          Read more →
         </div>
       </div>
-    </div>
+    </NavLink>
   );
 };
 

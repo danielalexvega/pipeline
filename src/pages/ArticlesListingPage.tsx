@@ -36,6 +36,7 @@ type FeaturedArticleProps = Readonly<{
 }>;
 
 const FeaturedArticleVertical: React.FC<FeaturedArticleProps> = ({ image, title, published, tags, description, urlSlug, itemId }) => {
+  const { isDarkMode } = useTheme();
   return (
     <div className="flex flex-col lg:flex-row items-center pt-[104px] pb-[120px] gap-12"
       {...createItemSmartLink(itemId)}
@@ -52,7 +53,7 @@ const FeaturedArticleVertical: React.FC<FeaturedArticleProps> = ({ image, title,
       />
 
       <div className="lg:basis-1/2 xl:basis-3/5">
-        <h2 className="text-heading-2 text-black mb-4">{title}</h2>
+        <h2 className={`text-heading-2 mb-4 ${ isDarkMode ? "text-white" : "text-black"}`}>{title}</h2>
         {/* Published Date */}
         <p className="text-gray-light text-body-sm mb-3">
           {published

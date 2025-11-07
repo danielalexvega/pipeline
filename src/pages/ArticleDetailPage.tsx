@@ -262,7 +262,7 @@ const ArticleDetailPage: React.FC = () => {
       )}
 
       {article.elements.related_articles.linkedItems.length > 0 && (
-        <PageSection color="bg-white">
+        <PageSection color={`${ isDarkMode ? "bg-black":"bg-white"}`}>
           <div className="flex flex-col max-w-6xl mx-auto py-[104px]">
             <h2 className="text-heading-2 text-heading-2-color pb-5">
               Related articles

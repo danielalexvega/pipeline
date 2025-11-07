@@ -1,6 +1,7 @@
 import { FC } from "react";
 import ButtonLink from "../ButtonLink";
 import { createItemSmartLink } from "../../utils/smartlink";
+import { useTheme } from "../../context/ThemeContext";
 
 type TeamListItemProps = {
   image: {
@@ -17,17 +18,18 @@ type TeamListItemProps = {
 };
 
 export const TeamListItem: FC<TeamListItemProps> = ({ image, prefix, suffix, firstName, lastName, title, link, itemId }) => {
+  const { isDarkMode } = useTheme();
   return (
     <div className="flex flex-col items-center text-center gap-6"
           {...createItemSmartLink(itemId)}>
       <div className="w-[300px] h-[300px] rounded-full overflow-hidden">
         <img src={image.url} alt={image.alt} className="w-full h-full object-cover" />
       </div>
-      <h3 className="flex-none text-heading-3 text-burgundy">
+      <h3 className={`flex-none text-heading-3 ${ isDarkMode ? "text-white" : "text-darkGreen"}`}>
         {prefix} {firstName} {lastName}
         {suffix && `, ${suffix}`}
       </h3>
-      <p className="text-grey-600 text-body-lg mt-auto">{title}</p>
+      <p className={`${ isDarkMode ? "text-white" : "text-grey-600"} text-body-lg mt-auto`}>{title}</p>
       <ButtonLink href={link} style="transparent" className="mt-auto">
         Show bio
       </ButtonLink>

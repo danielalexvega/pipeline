@@ -12,6 +12,7 @@ import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, apply
 import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTheme } from "../context/ThemeContext";
 
 const PersonDetailPage: React.FC = () => {
   const { environmentId, apiKey } = useAppContext();
@@ -20,6 +21,7 @@ const PersonDetailPage: React.FC = () => {
   const isPreview = searchParams.get("preview") === "true";
   const lang = searchParams.get("lang");
   const queryClient = useQueryClient();
+  const { isDarkMode } = useTheme();
 
   const { data: person, refetch } = useQuery({
     queryKey: ["person-detail", slug, lang, isPreview],
@@ -80,8 +82,8 @@ const PersonDetailPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-12">
-      <PageSection color="bg-azure">
-        <div className="azure-theme flex flex-col-reverse gap-16 lg:flex-row items-center pt-[104px] pb-[160px]">
+      <PageSection color={`${ isDarkMode ? "bg-black":"bg-mintGreen"}`}>
+        <div className={`${ isDarkMode ? "dark-mode" : "mintGreen-theme"} flex flex-col-reverse gap-16 lg:flex-row items-center pt-[104px] pb-[160px]`}>
           <div className="flex flex-col flex-1 gap-6">
             <div className="w-fit text-xs text-body-color border tracking-wider font-[700] border-tag-border-color px-4 py-2 rounded-lg uppercase">
               {person.system.language === "es-ES" ? "Equipo" : "Team"}
@@ -113,7 +115,7 @@ const PersonDetailPage: React.FC = () => {
         </div>
       </PageSection>
 
-      <PageSection color="bg-white">
+      <PageSection color={`${ isDarkMode ? "bg-black":"bg-white"}`}>
         <div className="flex flex-col gap-12 mx-auto items-center max-w-fit">
           {person.elements.biography?.value && (
             <div className="rich-text-body flex mx-auto flex-col gap-5 items-center max-w-[728px]"
