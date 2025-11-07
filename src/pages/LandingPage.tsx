@@ -3,6 +3,7 @@ import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import HeroImage from "../components/HeroImage";
 import PageContent from "../components/PageContent";
 import PageSection from "../components/PageSection";
+import ArticleCount from "../components/ArticleCount";
 import "../index.css";
 import { LanguageCodenames, type LandingPage } from "../model";
 import { createClient } from "../utils/client";
@@ -134,6 +135,7 @@ const LandingPage: FC = () => {
         />
       </PageSection>
       <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
+        <ArticleCount />
         <PageContent body={landingPage.elements.body_copy!} itemId={landingPage.system.id} elementName="body_copy" isPreview={isPreview} />
       </PageSection>
       <PageSection color={isDarkMode ? "bg-black flex flex-row" : "bg-white flex flex-row"}>

@@ -6,6 +6,7 @@ import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { useAppContext } from "../context/AppContext";
 import { createPreviewLink } from "../utils/link";
+import { useTheme } from "../context/ThemeContext";
 
 const Navigation: FC = () => {
   const { environmentId, apiKey, collection } = useAppContext();
@@ -15,6 +16,7 @@ const Navigation: FC = () => {
   const lang = searchParams.get("lang");
   const collectionParam = searchParams.get("collection")
   const collectionFilter = collectionParam ?? collection ?? "patient_resources";
+  const { isDarkMode } = useTheme();
 
   const [navigation] = useSuspenseQueries({
     queries: [
@@ -44,7 +46,7 @@ const Navigation: FC = () => {
 
   const createMenuLink = (name: string, link: string) => (
     <li key={name}>
-      <NavLink to={createPreviewLink(link, isPreview)} className="text-base leading-5 text-white w-fit block hover:text-mintGreen uppercase font-lexend">{name}</NavLink>
+      <NavLink to={createPreviewLink(link, isPreview)} className={`text-base leading-5 text-white w-fit block uppercase font-lexend border-b-[2px] transition-all duration-300 ${isDarkMode ? "border-black hover:border-white" : "border-darkGreen hover:text-mintGreen hover:border-mintGreen"}`}>{name}</NavLink>
     </li>
   );
 

@@ -11,6 +11,7 @@ import { createElementSmartLink, createFixedAddSmartLink, createItemSmartLink } 
 import { Elements, IContentItem } from "@kontent-ai/delivery-sdk";
 import VideoComponent from "./Video";
 import { HubSpotFormComponent } from "./HubSpotForm";
+import { useTheme } from "../context/ThemeContext";
 
 type PageContentProps = {
   body: Elements.RichTextElement;
@@ -20,10 +21,11 @@ type PageContentProps = {
 };
 
 const PageContent: FC<PageContentProps> = ({ body, itemId, elementName, isPreview = false }) => {
+  const { isDarkMode } = useTheme();
   const value = !body || !body.value ? "<p><br/></p>" : body.value;
   const portableText = transformToPortableText(value);
   return (
-    <div className="pt-10 pb-20 flex flex-col"
+    <div className={`pt-10 pb-20 flex flex-col ${isDarkMode ? "dark-mode" : ""}`}
       {...createItemSmartLink(itemId)}
       {...createElementSmartLink(
         elementName

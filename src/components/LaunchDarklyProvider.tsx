@@ -40,6 +40,9 @@ const LaunchDarklyInit: FC = () => {
         // Track an event to confirm connectivity with source "cursor" as specified
         ldClient.track("sdk-initialized", { source: "cursor" });
         
+        // Track LaunchDarkly verification event
+        ldClient.track("6903abe86f4cd209c5711e58");
+        
         // Evaluate a flag to ensure SDK is working
         // Using a flag key that can be configured in LaunchDarkly
         const flagValue = ldClient.variation("sdk-check", false);

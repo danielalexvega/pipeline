@@ -221,14 +221,14 @@ const ArticleDetailPage: React.FC = () => {
       </PageSection>
 
       <PageSection color={`${ isDarkMode ? "bg-black": "bg-white"}`}>
-        <div className="flex flex-col gap-12 mx-auto items-center max-w-fit mt-20">
-          <p className="text-body-xl text-body-color font-[600] w-[728px] max-w-[728px]"
+        <div className="flex flex-col gap-12 mx-auto items-center max-w-fit mt-10">
+          {/* <p className="text-body-xl text-body-color font-[600] w-[728px] max-w-[728px]"
           {...createItemSmartLink(article.system.id)}
           {...createElementSmartLink("introduction")}
           >
             {article.elements.introduction.value}
-          </p>
-          <div className="rich-text-body flex mx-auto flex-col gap-5 items-center max-w-[728px]"
+          </p> */}
+          <div className={`${isDarkMode ? "dark-mode" : ""} rich-text-body flex mx-auto flex-col gap-5 items-center max-w-[728px]`}
           {...createItemSmartLink(article.system.id)}
           {...createElementSmartLink("body_copy")}
           >
@@ -238,8 +238,8 @@ const ArticleDetailPage: React.FC = () => {
       </PageSection>
 
       {author && (
-        <PageSection color="bg-creme">
-          <div className="creme-theme flex gap-24 max-w-[728px] mx-auto py-[104px] items-center ">
+        <PageSection color={`${isDarkMode ? "bg-black" : "bg-mintGreen"}`}>
+          <div className={`${isDarkMode ? "dark-mode" : "mintGreen-theme"} flex gap-24 max-w-[728px] mx-auto py-[104px] items-center `}>
             <h2 className="text-heading-2 text-heading-2-color">
               Author
             </h2>
@@ -250,6 +250,7 @@ const ArticleDetailPage: React.FC = () => {
                 lastName={author.elements.last_name?.value || ""}
                 suffix={author.elements.suffixes?.value}
                 jobTitle={author.elements.job_title?.value || ""}
+                codename={author.system.codename}
                 image={{
                   url: author.elements.image?.value[0]?.url || "",
                   alt: author.elements.image?.value[0]?.description || `Photo of ${authorName}`,
@@ -263,7 +264,7 @@ const ArticleDetailPage: React.FC = () => {
       {article.elements.related_articles.linkedItems.length > 0 && (
         <PageSection color="bg-white">
           <div className="flex flex-col max-w-6xl mx-auto py-[104px]">
-            <h2 className="text-heading-2 text-heading-2-color">
+            <h2 className="text-heading-2 text-heading-2-color pb-5">
               Related articles
             </h2>
             <ArticleList
@@ -273,7 +274,7 @@ const ArticleDetailPage: React.FC = () => {
                   url: article.elements.image.value[0]?.url ?? "",
                   alt: article.elements.image.value[0]?.description ?? "",
                 },
-                urlSlug: article.elements.url_slug.value,
+                urlSlug: `/articles/${article.elements.url_slug.value}`,
                 introduction: article.elements.introduction.value,
                 publishDate: article.elements.publish_date.value ?? "",
                 topics: article.elements.music_topics?.value?.map(topic => topic.name) || [],

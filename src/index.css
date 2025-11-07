@@ -30,8 +30,8 @@ h1, h2, h3 {
   --color-heading-3: var(--color-darkGreen);
   --color-heading-4: var(--color-darkGreen);
 
-  --color-body-large: var(--color-grey);
-  --color-body: var(--color-grey);
+  --color-body-large: var(--color-black);
+  --color-body: var(--color-black);
   --color-small: var(--color-grey);
 
   --color-border: var(--color-darkGreen);
@@ -155,10 +155,10 @@ h1, h2, h3 {
   --size-heading-3: 36px;
   --size-heading-4: 20px;
 
-  --color-heading-1: var(--color-grey);
-  --color-heading-2: var(--color-grey);
-  --color-heading-3: var(--color-grey);
-  --color-heading-4: var(--color-grey);
+  --color-heading-1: var(--color-black);
+  --color-heading-2: var(--color-black);
+  --color-heading-3: var(--color-black);
+  --color-heading-4: var(--color-black);
 
   --line-height-heading-1: 170%;
   --line-height-heading-2: 170%;
@@ -169,4 +169,11 @@ h1, h2, h3 {
   --font-weight-heading-2: 800;
   --font-weight-heading-3: 800;
   --font-weight-heading-4: 700;
+}
+
+.rich-text-body .dark-mode {
+  --color-heading-1: var(--color-white);
+  --color-heading-2: var(--color-white);
+  --color-heading-3: var(--color-white);
+  --color-heading-4: var(--color-white);
 }
