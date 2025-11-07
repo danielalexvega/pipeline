@@ -52,12 +52,13 @@ const createPortableTextComponents = (
       switch (item.system.type) {
         case "video":
           return <VideoComponent video={item as Video} componentId={item.system.id} componentName={item.system.name} />;
-        case "disclaimer":
+        case "disclaimer": {
           const disclaimerItem = item as Disclaimer;
           return disclaimerItem.elements.type.value[0]?.codename === "promotional"
             ? <PromotionalDisclaimer title={disclaimerItem.elements.headline.value} text={disclaimerItem.elements.subheadline.value} componentId={item.system.id} componentName={item.system.name} />
             : <InformationalDisclaimer title={disclaimerItem.elements.headline.value} text={disclaimerItem.elements.subheadline.value} componentId={item.system.id} componentName={item.system.name} />;
-        case "reusable_content_block":
+        }
+        case "reusable_content_block": {
           const content = item as ReusableContentBlock;
           return <PageContent
             body={content.elements.content}
@@ -65,7 +66,8 @@ const createPortableTextComponents = (
             elementName="content"
             isPreview={isPreview}
           />;
-        case "call_to_action":
+        }
+        case "call_to_action": {
           const cta = item as CallToAction;
           return (
             <CallToActionComponent
@@ -81,17 +83,20 @@ const createPortableTextComponents = (
               componentName={cta.system.name}
             />
           );
-        case "form__hubspot_integration":
+        }
+        case "form__hubspot_integration": {
           return (
             <HubSpotFormComponent item={item as FormHubspotIntegration} />
           );
-        case "a_b_cta":
+        }
+        case "a_b_cta": {
           return (
             <ABCTAComponent 
               abCta={item as ABCTA} 
               isPreview={isPreview} 
             />
           );
+        }
         default:
           return (
             <div className="bg-red-500 text-white">

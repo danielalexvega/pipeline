@@ -7,9 +7,15 @@ const LaunchDarklyInit: FC = () => {
   useEffect(() => {
     if (ldClient) {
       // Listen for errors
-      const handleError = (error: any) => {
+      const handleError = (error: unknown) => {
         console.error("LaunchDarkly SDK error:", error);
-        if (error?.status === 401) {
+
+        const status =
+          typeof error === "object" && error !== null && "status" in error
+            ? Number((error as { status?: number }).status)
+            : undefined;
+
+        if (status === 401) {
           console.error(
             "🚨 LaunchDarkly 401 Error: Authentication failed.\n" +
             "This usually means:\n" +
@@ -53,16 +59,19 @@ const LaunchDarklyInit: FC = () => {
 
       // Use waitUntilReady() which resolves immediately if already ready
       let isCancelled = false;
-      ldClient.waitUntilReady().then(() => {
-        if (!isCancelled) {
-          handleReady();
-        }
-      }).catch((error) => {
-        if (!isCancelled) {
-          console.error("LaunchDarkly SDK initialization error:", error);
-          handleError(error);
-        }
-      });
+      ldClient
+        .waitUntilReady()
+        .then(() => {
+          if (!isCancelled) {
+            handleReady();
+          }
+        })
+        .catch((error: unknown) => {
+          if (!isCancelled) {
+            console.error("LaunchDarkly SDK initialization error:", error);
+            handleError(error);
+          }
+        });
 
       return () => {
         isCancelled = true;
