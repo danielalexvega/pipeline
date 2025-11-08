@@ -7,6 +7,8 @@ import {
   calculatePersonalizationScore 
 } from "../../utils/personalization";
 import { useTheme } from "../../context/ThemeContext";
+import { useLogin } from "../../context/LoginContext";
+import { useFlags } from "launchdarkly-react-client-sdk";
 interface PersonalTasteListProps {
   articles: Article[];
 }
@@ -23,6 +25,9 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
   const [showPersonalized, setShowPersonalized] = useState(true);
   const userProfile = getUserInterestProfile();
   const { isDarkMode } = useTheme();
+  const { isLoggedIn } = useLogin();
+  const flags = useFlags();
+  const showPersonalizationDebug = isLoggedIn && (flags["personalizationDebugger"] ?? false);
 
   const { personalizedArticles, allArticles } = useMemo(() => {
     if (!userProfile.hasInterests) {
@@ -32,7 +37,7 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
     const personalized = getPersonalizedRecommendations(
       articles,
       getArticleTopics,
-      { minimumScore: 0.1, includeMixed: true }
+      { minimumScore: 0.4, includeMixed: false }
     );
     
     return { 
@@ -88,7 +93,7 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
       )}
       
       {/* Article Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-8 pt-10 pb-10">
         {displayArticles.map((article) => {
           const topics = getArticleTopics(article);
           const personalizationScore = calculatePersonalizationScore(topics);
@@ -121,7 +126,7 @@ const PersonalTasteList: FC<PersonalTasteListProps> = ({
               {topics.length > 0 && (
                 <div className="mt-2 text-xs text-gray-500 mb-2">
                   Topics: {article.elements.music_topics?.value?.map(t => t.name).join(', ') || topics.join(', ')} 
-                  {userProfile.hasInterests && (
+                  {userProfile.hasInterests && showPersonalizationDebug && (
                     <span className="ml-2 text-blue-600">
                       (Score: {(personalizationScore * 100).toFixed(0)}%)
                     </span>

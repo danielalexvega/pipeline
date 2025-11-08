@@ -23,12 +23,10 @@ export const LaunchDarklyUserProvider: FC<PropsWithChildren> = ({ children }) =>
         kind: "user",
         key: username.toLowerCase(), // Use lowercase username as key for consistency
         name: username,
-        // You can add more attributes here for targeting
-        // email: userEmail,
-        // custom: {
-        //   role: "admin",
-        //   department: "engineering",
-        // }
+        loggedIn: true,
+        attributes: {
+          loggedIn: true,
+        },
       };
 
       ldClient.identify(userContext).then(() => {
@@ -42,6 +40,10 @@ export const LaunchDarklyUserProvider: FC<PropsWithChildren> = ({ children }) =>
         kind: "user",
         key: "anonymous-user",
         anonymous: true,
+        loggedIn: false,
+        attributes: {
+          loggedIn: false,
+        },
       };
 
       ldClient.identify(anonymousContext).then(() => {

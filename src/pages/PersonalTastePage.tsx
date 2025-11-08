@@ -15,6 +15,7 @@ import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink"
 import { Replace } from "../utils/types";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import PersonalTasteList from "../components/articles/PersonalTasteList";
+import MusicRecommendation from "../components/MusicRecommendation";
 import { useTheme } from "../context/ThemeContext";
 
 const usePersonalTastePage = (isPreview: boolean, lang: string | null) => {
@@ -198,6 +199,9 @@ const PersonalTastePage: React.FC = () => {
       </PageSection>
 
       <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
+        <div className="mt-12">
+          <MusicRecommendation />
+        </div>
         <PersonalTasteList articles={articles} />
       </PageSection>
 

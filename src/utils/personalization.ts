@@ -215,7 +215,7 @@ export function sortByPersonalization<T>(
 export function filterByUserInterests<T>(
   items: T[], 
   getTopics: (item: T) => string[],
-  minimumScore: number = 0.1
+  minimumScore: number = 0.5
 ): T[] {
   return items.filter(item => {
     const score = calculatePersonalizationScore(getTopics(item));
@@ -236,7 +236,7 @@ export function getPersonalizedRecommendations<T>(
     includeMixed?: boolean; // Include some non-personalized items for discovery
   } = {}
 ): T[] {
-  const { minimumScore = 0.1, maxResults, includeMixed = true } = options;
+  const { minimumScore = 0.5, maxResults, includeMixed = true } = options;
   
   // Get personalized items
   const personalizedItems = sortByPersonalization(

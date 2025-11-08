@@ -5,13 +5,18 @@ import {
   clearUserInterests,
   getUserInterests 
 } from '../utils/personalization';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 const PersonalizationDebug: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
+  const flags = useFlags();
   const profile = getUserInterestProfile();
   const interests = getUserInterests();
+
+  const isDebuggerEnabled = Boolean(flags["personalizationDebugger"]);
+console.log("isDebuggerEnabled", isDebuggerEnabled);
 
   const handleClear = () => {
     if (confirm('This will clear all your tracked interests. Are you sure?')) {
@@ -19,6 +24,10 @@ const PersonalizationDebug: FC = () => {
       window.location.reload();
     }
   };
+
+  if (!isDebuggerEnabled) {
+    return null;
+  }
 
   if (!profile.hasInterests) {
     return (

@@ -10,7 +10,7 @@ const Footer: FC = () => (
       <Navigation />
     </div>
     <Divider />
-    <p className="text-sm text-white mx-auto w-fit py-[60px] uppercase font-lexend">This is a demo site built with Kontent.ai and Next.js.</p>
+    <p className="text-sm text-white mx-auto w-fit py-[60px] uppercase font-lexend">This is a demo site built with Kontent.ai and Vite and LaunchDarkly.</p>
   </footer>
 );
 

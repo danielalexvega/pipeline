@@ -16,7 +16,7 @@ const Header: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const lang = searchParams.get("lang");
-  const { isLoggedIn, logout } = useLogin();
+  const { isLoggedIn, logout, username } = useLogin();
   const { isDarkMode } = useTheme();
 
   return (
@@ -59,25 +59,32 @@ const Header: React.FC = () => {
                 />
               </div>
             )}
-            {isLoggedIn ? (
-              <button
-                onClick={logout}
-                className={`text-base leading-5 text-white w-fit block uppercase font-lexend border-b-[2px] transition-all duration-300 ${
-                  isDarkMode ? "border-black hover:border-white" : "border-darkGreen hover:text-mintGreen hover:border-mintGreen"
-                }`}
-              >
-                Logout
-              </button>
-            ) : (
-              <button
-                onClick={() => setIsLoginModalOpen(true)}
-                className={`text-base leading-5 text-white w-fit block uppercase font-lexend border-b-[2px] transition-all duration-300 ${
-                  isDarkMode ? "border-black hover:border-white" : "border-darkGreen hover:text-mintGreen hover:border-mintGreen"
-                }`}
-              >
-                Login
-              </button>
-            )}
+            <div className="flex flex-col items-end gap-1">
+              {isLoggedIn ? (
+                <button
+                  onClick={logout}
+                  className={`text-base leading-5 text-white w-fit block uppercase font-lexend border-b-[2px] transition-all duration-300 ${
+                    isDarkMode ? "border-black hover:border-white" : "border-darkGreen hover:text-mintGreen hover:border-mintGreen"
+                  }`}
+                >
+                  Logout
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className={`text-base leading-5 text-white w-fit block uppercase font-lexend border-b-[2px] transition-all duration-300 ${
+                    isDarkMode ? "border-black hover:border-white" : "border-darkGreen hover:text-mintGreen hover:border-mintGreen"
+                  }`}
+                >
+                  Login
+                </button>
+              )}
+              {isLoggedIn && username && (
+                <span className={`text-xs ${isDarkMode ? "text-white/80" : "text-white"}`}>
+                  Logged in as {username}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </Container>
