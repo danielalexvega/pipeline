@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useMemo } from "react";
 import PageSection from "../components/PageSection";
 import { useAppContext } from "../context/AppContext";
 import { createClient } from "../utils/client";
@@ -12,7 +12,6 @@ import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
 import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
-import Selector, { SelectorOption } from "../components/Selector";
 import ImageWithTag from "../components/ImageWithTag";
 import Tags from "../components/Tags";
 import ButtonLink from "../components/ButtonLink";
@@ -187,6 +186,11 @@ const useArticles = (isPreview: boolean, lang: string | null) => {
   return { articles, featuredArticle };
 };
 
+type FilterOption = {
+  label: string;
+  codename: string;
+};
+
 const useArticleTypes = (isPreview: boolean) => {
   const { environmentId, apiKey } = useAppContext();
   const [types, setTypes] = useState<{ terms: ITaxonomyTerms[] }>({ terms: [] });
@@ -221,17 +225,38 @@ const ArticlesListingPage: React.FC = () => {
   const { articles, featuredArticle } = useArticles(isPreview, lang);
   const articleTypes = useArticleTypes(isPreview);
 
-  const [articleType, setArticleType] = useState<string>("All");
+  const [selectedType, setSelectedType] = useState<string>("");
   const { isDarkMode } = useTheme();
 
-  const handleArticleTypeChange = (option: SelectorOption) => {
-    setArticleType(option.label);
-    if (option.label === "All") {
+  const filterOptions = useMemo<FilterOption[]>(() => {
+    const taxonomyOptions =
+      articleTypes.terms?.map(term => ({
+        label: term.name,
+        codename: term.codename,
+      })) ?? [];
+    return [
+      { label: "All", codename: "" },
+      ...taxonomyOptions,
+    ];
+  }, [articleTypes]);
+
+  const handleArticleTypeChange = (option: FilterOption) => {
+    setSelectedType(option.codename);
+    if (!option.codename) {
       searchParams.delete("type");
     } else {
       searchParams.set("type", option.codename);
     }
   };
+
+  const filteredArticles = useMemo(() => {
+    if (!selectedType) {
+      return articles;
+    }
+    return articles.filter(article =>
+      article.elements.music_topics?.value?.some(topic => topic.codename === selectedType),
+    );
+  }, [articles, selectedType]);
 
   const [landingPageData] = useSuspenseQueries({
     queries: [
@@ -339,22 +364,30 @@ const ArticlesListingPage: React.FC = () => {
 
       <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
         <div className="flex flex-col gap-8 pt-[104px] pb-[160px]">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <Selector
-              label="Article Type"
-              options={[
-                { label: "All", codename: "" },
-                ...articleTypes.terms.map((t: ITaxonomyTerms) => ({
-                  label: t.name,
-                  codename: t.codename,
-                })),
-              ]}
-              selectedOption={articleType}
-              onChange={handleArticleTypeChange}
-            />
+          <div className="flex flex-wrap gap-3">
+            {filterOptions.map(option => {
+              const isActive = option.codename === selectedType;
+              return (
+                <button
+                  key={option.codename || "all"}
+                  onClick={() => handleArticleTypeChange(option)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    isActive
+                      ? isDarkMode
+                        ? "bg-white text-black"
+                        : "bg-darkGreen text-white"
+                      : isDarkMode
+                        ? "bg-black text-white border border-white/40 hover:bg-white/10"
+                        : "bg-white text-darkGreen border border-darkGreen/40 hover:bg-darkGreen/10"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
           </div>
           <ArticleList
-            articles={articles.map(article => ({
+            articles={filteredArticles.map(article => ({
               image: {
                 url: article.elements.image.value[0]?.url ?? "",
                 alt: article.elements.image.value[0]?.description ?? article.elements.title.value,

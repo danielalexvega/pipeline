@@ -101,6 +101,7 @@ const useArticles = (isPreview: boolean, lang: string | null) => {
       .items<Article>()
       .type("article")
       .languageParameter((lang ?? "default") as LanguageCodenames)
+      .orderByAscending("elements.publish_date")
       .toPromise()
       .then(res => {
         setArticles(res.data.items);

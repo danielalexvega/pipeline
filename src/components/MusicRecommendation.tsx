@@ -107,7 +107,7 @@ const MusicRecommendation: FC<MusicRecommendationProps> = ({
       <div className="flex flex-col gap-2">
         <h2 className="text-2xl font-bold">AI Music Recommendations</h2>
         <p className="text-sm opacity-80">
-          Get personalized music suggestions based on your interests.
+          Discover new music based on the articles you have read.
         </p>
       </div>
 
