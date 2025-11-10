@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { createClient } from "../utils/client";
 import { useAppContext } from "../context/AppContext";
@@ -17,6 +17,17 @@ import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import PageContent from "../components/PageContent";
 import { trackArticleTopics } from "../utils/personalization";
 import { useTheme } from "../context/ThemeContext";
+import { useLDClient } from "launchdarkly-react-client-sdk";
+import type { LDContext } from "launchdarkly-js-client-sdk";
+
+const getCookieValue = (name: string): string | null => {
+  if (typeof document === "undefined") return null;
+  const cookie = document.cookie
+    .split("; ")
+    .find(row => row.startsWith(`${name}=`));
+  if (!cookie) return null;
+  return cookie.split("=").slice(1).join("=") || null;
+};
 
 const HeroImageAuthorCard: React.FC<{
   prefix?: string;
@@ -68,6 +79,8 @@ const ArticleDetailPage: React.FC = () => {
   const lang = searchParams.get("lang");
   const queryClient = useQueryClient();
   const { isDarkMode } = useTheme();
+  const ldClient = useLDClient();
+  const hasTrackedViewRef = useRef(false);
 
   const { data: article, refetch } = useQuery({
     queryKey: ["article-detail", slug, lang, isPreview],
@@ -135,6 +148,44 @@ const ArticleDetailPage: React.FC = () => {
   );
 
   useCustomRefresh(onRefresh);
+
+  useEffect(() => {
+    if (!ldClient || !article || hasTrackedViewRef.current) {
+      return;
+    }
+
+    const rawCookie = getCookieValue("ldcontext");
+    if (!rawCookie) {
+      return;
+    }
+
+    let parsedContext: LDContext | null = null;
+    try {
+      parsedContext = JSON.parse(decodeURIComponent(rawCookie)) as LDContext;
+    } catch (error) {
+      console.warn("Failed to parse LaunchDarkly context from cookie:", error);
+      return;
+    }
+
+    if (!parsedContext || typeof parsedContext !== "object") {
+      return;
+    }
+
+    hasTrackedViewRef.current = true;
+
+    (async () => {
+      try {
+        await ldClient.identify(parsedContext);
+        ldClient.track("article-views", {
+          articleId: article.system.id,
+          slug: article.elements.url_slug?.value,
+          title: article.elements.title?.value,
+        });
+      } catch (error) {
+        console.error("Failed to track LaunchDarkly article view:", error);
+      }
+    })();
+  }, [ldClient, article]);
 
   // Track topic interests when article loads
   useEffect(() => {

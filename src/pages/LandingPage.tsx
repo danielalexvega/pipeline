@@ -139,8 +139,15 @@ const LandingPage: FC = () => {
         <PageContent body={landingPage.elements.body_copy!} itemId={landingPage.system.id} elementName="body_copy" isPreview={isPreview} />
       </PageSection>
       <PageSection color={isDarkMode ? "bg-black flex flex-row" : "bg-white flex flex-row"}>
-        <FeaturedContent featuredContent={landingPage.elements.featured_content!} parentId={landingPage.system.id}></FeaturedContent>
-
+        <div className="flex flex-col gap-6">
+          <h2 className={`text-heading-2 font-bold ${isDarkMode ? "text-white" : "text-darkGreen"}`}>
+            Featured Articles
+          </h2>
+          <FeaturedContent
+            featuredContent={landingPage.elements.featured_content!}
+            parentId={landingPage.system.id}
+          />
+        </div>
       </PageSection>
     </div>
   );

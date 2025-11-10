@@ -53,6 +53,13 @@ const MusicRecommendation: FC<MusicRecommendationProps> = ({
         },
       };
 
+      // Persist the LaunchDarkly context in a cookie for debugging/inspection
+      try {
+        document.cookie = `ldcontext=${encodeURIComponent(JSON.stringify(ldContext))}; path=/; SameSite=Lax`;
+      } catch (cookieError) {
+        console.warn("Failed to persist LaunchDarkly context cookie:", cookieError);
+      }
+
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
