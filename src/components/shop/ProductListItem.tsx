@@ -1,65 +1,78 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useMemo } from "react";
 import ButtonLink from "../ButtonLink";
 import { createItemSmartLink } from "../../utils/smartlink";
 import { Product } from "../../model";
-import { getShopifyProduct } from "../../utils/api";
-
-// Import the Storefront API types from utils
-import type { StorefrontProduct } from "../../utils/api";
 
 type ProductListItemProps = {
   product: Product;
-  useShopify?: boolean;
-  shopifyProductHandle?: string;
 };
 
 export const ProductListItem: FC<ProductListItemProps> = ({
   product
 }) => {
+  type CloudinaryAsset = {
+    url: string;
+    alt?: string;
+  };
 
-  const [shopifyProduct, setShopifyProduct] = useState<StorefrontProduct | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const parseCloudinaryAsset = (rawValue: string | undefined | null): CloudinaryAsset | null => {
+    if (!rawValue) return null;
 
-  // Get the raw PIM integration value for dependency tracking
-  const pimIntegrationValue = product.elements.pim_integration_e_g__shopify.value;
+    const buildAsset = (value: unknown): CloudinaryAsset | null => {
+      if (!value) return null;
 
-  useEffect(() => {
-    if (!pimIntegrationValue) return;
-    
-    // Parse the JSON inside useEffect to avoid creating new objects on every render
-    let pimData;
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          const asset = buildAsset(item);
+          if (asset) return asset;
+        }
+        return null;
+      }
+
+      if (typeof value === "object") {
+        const record = value as Record<string, unknown>;
+        const secureUrl = typeof record.secure_url === "string" ? record.secure_url : undefined;
+        const url = typeof record.url === "string" ? record.url : secureUrl;
+        if (!url) return null;
+
+        const alt =
+          typeof record.alt === "string"
+            ? record.alt
+            : typeof record.altText === "string"
+              ? record.altText
+              : typeof record.description === "string"
+                ? record.description
+                : typeof record.public_id === "string"
+                  ? record.public_id
+                  : typeof (record.context as { custom?: { alt?: string } } | undefined)?.custom?.alt === "string"
+                    ? (record.context as { custom?: { alt?: string } }).custom?.alt
+                    : undefined;
+
+        return { url, alt };
+      }
+
+      if (typeof value === "string" && value.trim().length > 0) {
+        return { url: value.trim() };
+      }
+
+      return null;
+    };
+
     try {
-      pimData = JSON.parse(pimIntegrationValue);
-    } catch (error) {
-      console.error("Failed to parse PIM integration data:", error);
-      setError("Invalid PIM integration data");
-      return;
+      const parsed = JSON.parse(rawValue);
+      const asset = buildAsset(parsed);
+      if (asset) return asset;
+    } catch {
+      // ignore parsing errors
     }
 
-    if (!pimData || !pimData[0]?.id) return;
-    
-    setLoading(true);
-    setError(null);
+    return buildAsset(rawValue);
+  };
 
-    // Use the full Shopify GID or extract the numeric ID for backward compatibility
-    const productIdentifier = pimData[0].id?.split('/').pop() || pimData[0].id; // Extract numeric ID or use as-is
-      
-    if (!productIdentifier) {
-      setError("Invalid product ID format");
-      setLoading(false);
-      return;
-    }
-    
-    getShopifyProduct(productIdentifier)
-      .then((data) => {
-        setShopifyProduct(data);
-      })
-      .catch((err) => {
-        setError(err.message || "Failed to fetch product");
-      })
-      .finally(() => setLoading(false));
-  }, [pimIntegrationValue]);
+  const cloudinaryAsset = useMemo(
+    () => parseCloudinaryAsset(product.elements.cloudinary_integration?.value),
+    [product.elements.cloudinary_integration?.value],
+  );
 
   const productUrl = `/shop/${product.system.codename}`;
 
@@ -70,10 +83,10 @@ export const ProductListItem: FC<ProductListItemProps> = ({
 
       {/* Product Image */}
       <div className="aspect-square bg-gray-100 overflow-hidden">
-        {shopifyProduct?.featuredImage?.url ? (
+        {cloudinaryAsset ? (
           <img
-            src={shopifyProduct.featuredImage.url}
-            alt={shopifyProduct.featuredImage.altText || product.elements.name.value || "Product image"}
+            src={cloudinaryAsset.url}
+            alt={cloudinaryAsset.alt || product.elements.name.value || "Product image"}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
@@ -90,44 +103,9 @@ export const ProductListItem: FC<ProductListItemProps> = ({
 
       {/* Product Details */}
       <div className="p-4">
-        {/* Loading indicator for Shopify data */}
-        {loading && (
-          <div className="mb-2">
-            <div className="animate-pulse bg-gray-200 h-4 w-24 rounded"></div>
-          </div>
-        )}
-
-        {/* Error indicator for Shopify data */}
-        {error && (
-          <div className="mb-2 text-xs text-red-600">
-            {error}
-          </div>
-        )}
-
         <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-burgundy transition-colors">
-          {shopifyProduct?.title || product.elements.name.value || "Untitled Product"}
+          {product.elements.name.value || "Untitled Product"}
         </h3>
-
-        {/* Price from Shopify variants */}
-        {shopifyProduct?.variants?.edges?.[0]?.node?.price && (
-          <div className="mb-3">
-            <span className="text-xl font-bold text-burgundy">
-              {shopifyProduct.variants.edges[0].node.price.currencyCode === 'USD' ? '$' : ''}
-              {parseFloat(shopifyProduct.variants.edges[0].node.price.amount).toFixed(2)}
-              {shopifyProduct.variants.edges[0].node.price.currencyCode !== 'USD' && 
-               ` ${shopifyProduct.variants.edges[0].node.price.currencyCode}`}
-            </span>
-            {shopifyProduct.variants.edges[0].node.compareAtPrice && 
-             parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount) > parseFloat(shopifyProduct.variants.edges[0].node.price.amount) && (
-              <span className="ml-2 text-sm text-gray-500 line-through">
-                {shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode === 'USD' ? '$' : ''}
-                {parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount).toFixed(2)}
-                {shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode !== 'USD' && 
-                 ` ${shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode}`}
-              </span>
-            )}
-          </div>
-        )}
 
         {/* Action Button */}
         <ButtonLink

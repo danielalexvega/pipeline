@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { createClient } from "../utils/client";
 import { useAppContext } from "../context/AppContext";
@@ -12,7 +12,66 @@ import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, apply
 import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getShopifyProduct, type StorefrontProduct } from "../utils/api";
+type CloudinaryAsset = {
+  url: string;
+  alt?: string;
+};
+
+const parseCloudinaryAsset = (rawValue: string | undefined | null, fallbackAlt: string): CloudinaryAsset | null => {
+  if (!rawValue) {
+    return null;
+  }
+
+  const tryBuildAsset = (value: unknown): CloudinaryAsset | null => {
+    if (!value) return null;
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        const asset = tryBuildAsset(item);
+        if (asset) return asset;
+      }
+      return null;
+    }
+
+    if (typeof value === "object") {
+      const record = value as Record<string, unknown>;
+      const secureUrl = typeof record.secure_url === "string" ? record.secure_url : undefined;
+      const url = typeof record.url === "string" ? record.url : secureUrl;
+      if (!url) return null;
+
+      const alt =
+        typeof record.alt === "string"
+          ? record.alt
+          : typeof record.altText === "string"
+            ? record.altText
+            : typeof record.description === "string"
+              ? record.description
+              : typeof record.public_id === "string"
+                ? record.public_id
+                : typeof (record.context as { custom?: { alt?: string } } | undefined)?.custom?.alt === "string"
+                  ? (record.context as { custom?: { alt?: string } }).custom?.alt
+                  : undefined;
+
+      return { url, alt: alt || fallbackAlt };
+    }
+
+    if (typeof value === "string" && value.trim().length > 0) {
+      return { url: value.trim(), alt: fallbackAlt };
+    }
+
+    return null;
+  };
+
+  try {
+    const parsed = JSON.parse(rawValue);
+    const asset = tryBuildAsset(parsed);
+    if (asset) return asset;
+  } catch {
+    // Ignore JSON parse errors – fall back to using the raw value.
+  }
+
+  return tryBuildAsset(rawValue);
+};
 
 const ProductDetailPage: React.FC = () => {
   const { environmentId, apiKey } = useAppContext();
@@ -42,48 +101,13 @@ const ProductDetailPage: React.FC = () => {
     enabled: !!slug,
   });
 
-  // Shopify product data
-  const [shopifyProduct, setShopifyProduct] = useState<StorefrontProduct | null>(null);
-  const [shopifyLoading, setShopifyLoading] = useState(false);
-  const [shopifyError, setShopifyError] = useState<string | null>(null);
-
-  // Fetch Shopify product data when CMS product is loaded
-  useEffect(() => {
-    if (!product?.elements.pim_integration_e_g__shopify.value) return;
-    
-    // Parse the JSON inside useEffect to avoid creating new objects on every render
-    let pimData;
-    try {
-      pimData = JSON.parse(product.elements.pim_integration_e_g__shopify.value);
-    } catch (error) {
-      console.error("Failed to parse PIM integration data:", error);
-      setShopifyError("Invalid PIM integration data");
-      return;
-    }
-
-    if (!pimData || !pimData[0]?.id) return;
-    
-    setShopifyLoading(true);
-    setShopifyError(null);
-
-    // Use the full Shopify GID or extract the numeric ID for backward compatibility
-    const productIdentifier = pimData[0].id?.split('/').pop() || pimData[0].id;
-      
-    if (!productIdentifier) {
-      setShopifyError("Invalid product ID format");
-      setShopifyLoading(false);
-      return;
-    }
-    
-    getShopifyProduct(productIdentifier)
-      .then((data) => {
-        setShopifyProduct(data);
-      })
-      .catch((err) => {
-        setShopifyError(err.message || "Failed to fetch product");
-      })
-      .finally(() => setShopifyLoading(false));
-  }, [product?.elements.pim_integration_e_g__shopify.value]);
+  const cloudinaryAsset = useMemo(() => {
+    if (!product) return null;
+    return parseCloudinaryAsset(
+      product.elements.cloudinary_integration?.value,
+      product.elements.name?.value || "Product image",
+    );
+  }, [product]);
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
     if (product) {
@@ -134,70 +158,22 @@ const ProductDetailPage: React.FC = () => {
             {...createItemSmartLink(product.system.id)}
             {...createElementSmartLink("name")}
             >
-              {shopifyProduct?.title || product.elements.name?.value}
+              {product.elements.name?.value}
             </h1>
-            
-            {/* Shopify Price */}
-            {shopifyProduct?.variants?.edges?.[0]?.node?.price && (
-              <div className="flex flex-col gap-2">
-                <div className="flex items-baseline gap-4">
-                  <span className="text-4xl font-bold text-burgundy">
-                    {shopifyProduct.variants.edges[0].node.price.currencyCode === 'USD' ? '$' : ''}
-                    {parseFloat(shopifyProduct.variants.edges[0].node.price.amount).toFixed(2)}
-                    {shopifyProduct.variants.edges[0].node.price.currencyCode !== 'USD' && 
-                     ` ${shopifyProduct.variants.edges[0].node.price.currencyCode}`}
-                  </span>
-                  {shopifyProduct.variants.edges[0].node.compareAtPrice && 
-                   parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount) > parseFloat(shopifyProduct.variants.edges[0].node.price.amount) && (
-                    <span className="text-xl text-gray-500 line-through">
-                      {shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode === 'USD' ? '$' : ''}
-                      {parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount).toFixed(2)}
-                      {shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode !== 'USD' && 
-                       ` ${shopifyProduct.variants.edges[0].node.compareAtPrice.currencyCode}`}
-                    </span>
-                  )}
-                </div>
-                {shopifyProduct.variants.edges[0].node.compareAtPrice && 
-                 parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount) > parseFloat(shopifyProduct.variants.edges[0].node.price.amount) && (
-                  <div className="text-sm text-green-600 font-medium">
-                    Save ${(parseFloat(shopifyProduct.variants.edges[0].node.compareAtPrice.amount) - parseFloat(shopifyProduct.variants.edges[0].node.price.amount)).toFixed(2)}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Loading indicator for Shopify data */}
-            {shopifyLoading && (
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <div className="animate-pulse bg-gray-200 h-8 w-32 rounded"></div>
-                <span>Loading price...</span>
-              </div>
-            )}
-
-            {/* Error indicator for Shopify data */}
-            {shopifyError && (
-              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-                {shopifyError}
-              </div>
-            )}
           </div>
           <div className="flex-1">
-            {shopifyProduct?.featuredImage?.url ? (
+            {cloudinaryAsset ? (
               <img
                 width={670}
                 height={440}
-                src={shopifyProduct.featuredImage.url}
-                alt={shopifyProduct.featuredImage.altText || product.elements.name?.value || "Product image"}
+                src={cloudinaryAsset.url}
+                alt={cloudinaryAsset.alt || product.elements.name?.value || "Product image"}
                 className="rounded-lg w-[670px] h-[440px] object-cover"
               />
             ) : (
-              <img
-                width={670}
-                height={440}
-                src={product.elements.cloudinary_integration?.value ?? ""}
-                alt={product.elements.name?.value ?? ""}
-                className="rounded-lg w-[670px] h-[440px] object-cover"
-              />
+              <div className="rounded-lg w-[670px] h-[440px] flex items-center justify-center bg-gray-100 text-gray-500 border border-gray-200">
+                <span>No product image available</span>
+              </div>
             )}
           </div>
         </div>
@@ -205,25 +181,11 @@ const ProductDetailPage: React.FC = () => {
 
       <PageSection color="bg-white">
         <div className="flex flex-col gap-12 mx-auto items-center max-w-fit">
-          {/* Shopify Description */}
-          {shopifyProduct?.description && (
-            <div className="flex mx-auto flex-col gap-5 items-center max-w-[728px]">
-              <h2 className="text-2xl font-semibold text-gray-900 text-center">Product Description</h2>
-              <div className="text-lg text-gray-700 leading-relaxed text-center">
-                {shopifyProduct.description}
-              </div>
-            </div>
-          )}
-          
-          {/* CMS Body Content */}
           {product.elements.body?.value && (
             <div className="rich-text-body flex mx-auto flex-col gap-5 items-center max-w-[728px]"
             {...createItemSmartLink(product.system.id)}
             {...createElementSmartLink("body")}
             >
-              {shopifyProduct?.description && (
-                <h2 className="text-2xl font-semibold text-gray-900 text-center mt-8">Additional Information</h2>
-              )}
               <PortableText
                 value={transformToPortableText(product.elements.body.value)}
                 components={defaultPortableRichTextResolvers}
