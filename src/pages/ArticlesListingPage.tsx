@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useMemo } from "react";
+import React, { useCallback, useState, useEffect, useMemo, useRef } from "react";
 import PageSection from "../components/PageSection";
 import { useAppContext } from "../context/AppContext";
 import { createClient } from "../utils/client";
@@ -18,7 +18,7 @@ import ButtonLink from "../components/ButtonLink";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { Replace } from "../utils/types";
 import { useTheme } from "../context/ThemeContext";
-import { useFlags } from "launchdarkly-react-client-sdk";
+import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 
 type FeaturedArticleProps = Readonly<{
   image: {
@@ -227,12 +227,14 @@ const ArticlesListingPage: React.FC = () => {
   const articleTypes = useArticleTypes(isPreview);
   const flags = useFlags();
   const isArtistSearchEnabled = flags["artistSearch"] ?? false;
+  const ldClient = useLDClient();
 
   console.log("isArtistSearchEnabled", isArtistSearchEnabled);
 
   const [selectedType, setSelectedType] = useState<string>(searchParams.get("type") || "");
   const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("search") || "");
   const { isDarkMode } = useTheme();
+  const hasTrackedSearch = useRef<boolean>(false);
 
   const filterOptions = useMemo<FilterOption[]>(() => {
     const taxonomyOptions =
@@ -257,11 +259,21 @@ const ArticlesListingPage: React.FC = () => {
     setSearchParams(newSearchParams);
   };
 
+  // Track search event when search query is present (including from URL params)
+  useEffect(() => {
+    if (ldClient && isArtistSearchEnabled && searchQuery.trim() && !hasTrackedSearch.current) {
+      ldClient.track("artist-search-used");
+      hasTrackedSearch.current = true;
+    }
+  }, [ldClient, isArtistSearchEnabled, searchQuery]);
+
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     const newSearchParams = new URLSearchParams(searchParams);
     if (!query) {
       newSearchParams.delete("search");
+      // Reset tracking when search is cleared
+      hasTrackedSearch.current = false;
     } else {
       newSearchParams.set("search", query);
     }
