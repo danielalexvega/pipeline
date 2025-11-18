@@ -208,7 +208,7 @@ const OurShopPage: React.FC = () => {
           >
             <PortableText
               value={transformToPortableText(shopPage.elements.body?.value ?? "")}
-              components={defaultPortableRichTextResolvers}
+              components={defaultPortableRichTextResolvers()}
             />
           </div>
         </PageSection>

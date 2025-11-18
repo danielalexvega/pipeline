@@ -205,7 +205,7 @@ const BlogPage: React.FC = () => {
           >
             <PortableText
               value={transformToPortableText(blogPage.elements.body.value)}
-              components={defaultPortableRichTextResolvers}
+              components={defaultPortableRichTextResolvers()}
             />
           </div>
         </PageSection>

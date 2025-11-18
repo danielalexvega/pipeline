@@ -54,7 +54,7 @@ const FeaturedEvent: FC<FeaturedEventProps> = ({ event }) => {
             <div className="mt-4">
               <PortableText
                 value={transformToPortableText(event.elements.description?.value ?? "")}
-                components={defaultPortableRichTextResolvers}
+                components={defaultPortableRichTextResolvers()}
               />
             </div>
           </div>

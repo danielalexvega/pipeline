@@ -124,7 +124,7 @@ const PersonDetailPage: React.FC = () => {
             >
               <PortableText
                 value={transformToPortableText(person.elements.biography.value)}
-                components={defaultPortableRichTextResolvers}
+                components={defaultPortableRichTextResolvers()}
               />
             </div>
           )}

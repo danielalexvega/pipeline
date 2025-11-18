@@ -188,7 +188,7 @@ const ProductDetailPage: React.FC = () => {
             >
               <PortableText
                 value={transformToPortableText(product.elements.body.value)}
-                components={defaultPortableRichTextResolvers}
+                components={defaultPortableRichTextResolvers()}
               />
             </div>
           )}

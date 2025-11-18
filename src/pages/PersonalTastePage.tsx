@@ -214,7 +214,7 @@ const PersonalTastePage: React.FC = () => {
           >
             <PortableText
               value={transformToPortableText(personalTastePage.elements.body?.value ?? "")}
-              components={defaultPortableRichTextResolvers}
+              components={defaultPortableRichTextResolvers()}
             />
           </div>
         </PageSection>

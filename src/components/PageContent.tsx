@@ -41,8 +41,9 @@ const createPortableTextComponents = (
   element: Elements.RichTextElement,
   isPreview: boolean = false,
 ): PortableTextReactResolvers => ({
-  ...defaultPortableRichTextResolvers,
+  ...defaultPortableRichTextResolvers(element),
   types: {
+    ...defaultPortableRichTextResolvers(element).types,
     componentOrItem: ({ value }) => {
       const item = element.linkedItems.find(item => item.system.codename === value.componentOrItem._ref) as IContentItem;
       if (!item) {

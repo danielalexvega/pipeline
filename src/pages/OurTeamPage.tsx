@@ -6,9 +6,8 @@ import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import TeamMemberList from "../components/team/TeamMemberList";
 import { Page, Person } from "../model/content-types";
 import { useSearchParams } from "react-router-dom";
-import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/richtext";
-import { PortableText } from "@portabletext/react";
-import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
+import { isEmptyRichText } from "../utils/richtext";
+import PageContent from "../components/PageContent";
 import { LanguageCodenames } from "../model";
 import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
 import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
@@ -198,17 +197,14 @@ const OurTeamPage: React.FC = () => {
         </div>
       </PageSection>
 
-      {!isEmptyRichText(teamPage.elements.body?.value ?? "") && (
+      {!isEmptyRichText(teamPage.elements.body?.value ?? "") && teamPage.elements.body && (
         <PageSection color={`${ isDarkMode ? "bg-black":"bg-white"}`}>
-          <div className="flex flex-col pt-10 mx-auto gap-6"
-            {...createItemSmartLink(teamPage.system.id)}
-            {...createElementSmartLink("body")}
-          >
-            <PortableText
-              value={transformToPortableText(teamPage.elements.body?.value ?? "")}
-              components={defaultPortableRichTextResolvers}
-            />
-          </div>
+          <PageContent
+            body={teamPage.elements.body}
+            itemId={teamPage.system.id}
+            elementName="body"
+            isPreview={isPreview}
+          />
         </PageSection>
       )}
 

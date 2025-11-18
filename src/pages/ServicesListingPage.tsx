@@ -191,7 +191,7 @@ const ServicesListingPage: React.FC = () => {
           >
             <PortableText
               value={transformToPortableText(servicesPage.elements.body.value)}
-              components={defaultPortableRichTextResolvers}
+              components={defaultPortableRichTextResolvers()}
             />
           </div>
         </PageSection>

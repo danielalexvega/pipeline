@@ -113,7 +113,7 @@ const BlogDetail: React.FC = () => {
       {...createElementSmartLink("body")}>
         <PortableText
           value={transformToPortableText(blogPost.elements.body?.value)}
-          components={defaultPortableRichTextResolvers}
+          components={defaultPortableRichTextResolvers()}
         />
       </div>
     </div>

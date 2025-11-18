@@ -195,7 +195,7 @@ const ServiceDetail: React.FC = () => {
           >
             <PortableText
               value={transformToPortableText(service.elements.description?.value)}
-              components={defaultPortableRichTextResolvers}
+              components={defaultPortableRichTextResolvers()}
             />
           </div>
 
