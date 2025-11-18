@@ -18,6 +18,7 @@ import ButtonLink from "../components/ButtonLink";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { Replace } from "../utils/types";
 import { useTheme } from "../context/ThemeContext";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 type FeaturedArticleProps = Readonly<{
   image: {
@@ -37,7 +38,7 @@ type FeaturedArticleProps = Readonly<{
 const FeaturedArticleVertical: React.FC<FeaturedArticleProps> = ({ image, title, published, tags, description, urlSlug, itemId }) => {
   const { isDarkMode } = useTheme();
   return (
-    <div className="flex flex-col lg:flex-row items-center pt-[104px] pb-[120px] gap-12"
+    <div className="flex flex-col lg:flex-row items-center pt-[104px] gap-12"
       {...createItemSmartLink(itemId)}
       {...createElementSmartLink("featured_article")}>
       <ImageWithTag
@@ -217,15 +218,20 @@ const useArticleTypes = (isPreview: boolean) => {
 
 const ArticlesListingPage: React.FC = () => {
   const { environmentId, apiKey } = useAppContext();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
   const lang = searchParams.get("lang");
 
   const articlesListingPage = useArticlesListingPage(isPreview, lang);
   const { articles, featuredArticle } = useArticles(isPreview, lang);
   const articleTypes = useArticleTypes(isPreview);
+  const flags = useFlags();
+  const isArtistSearchEnabled = flags["artistSearch"] ?? false;
 
-  const [selectedType, setSelectedType] = useState<string>("");
+  console.log("isArtistSearchEnabled", isArtistSearchEnabled);
+
+  const [selectedType, setSelectedType] = useState<string>(searchParams.get("type") || "");
+  const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("search") || "");
   const { isDarkMode } = useTheme();
 
   const filterOptions = useMemo<FilterOption[]>(() => {
@@ -242,21 +248,50 @@ const ArticlesListingPage: React.FC = () => {
 
   const handleArticleTypeChange = (option: FilterOption) => {
     setSelectedType(option.codename);
+    const newSearchParams = new URLSearchParams(searchParams);
     if (!option.codename) {
-      searchParams.delete("type");
+      newSearchParams.delete("type");
     } else {
-      searchParams.set("type", option.codename);
+      newSearchParams.set("type", option.codename);
     }
+    setSearchParams(newSearchParams);
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (!query) {
+      newSearchParams.delete("search");
+    } else {
+      newSearchParams.set("search", query);
+    }
+    setSearchParams(newSearchParams);
   };
 
   const filteredArticles = useMemo(() => {
-    if (!selectedType) {
-      return articles;
+    let filtered = articles;
+
+    // Filter by taxonomy type
+    if (selectedType) {
+      filtered = filtered.filter(article =>
+        article.elements.music_topics?.value?.some(topic => topic.codename === selectedType),
+      );
     }
-    return articles.filter(article =>
-      article.elements.music_topics?.value?.some(topic => topic.codename === selectedType),
-    );
-  }, [articles, selectedType]);
+
+    // Filter by search query (keywords and/or title) - only if feature flag is enabled
+    if (isArtistSearchEnabled && searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase();
+      filtered = filtered.filter(article => {
+        const title = article.elements.title.value?.toLowerCase() || "";
+        const keywords = article.elements.metadata__keywords?.value?.toLowerCase() || "";
+        
+        // Match if title contains the query OR keywords contain the query
+        return title.includes(query) || keywords.includes(query);
+      });
+    }
+
+    return filtered;
+  }, [articles, selectedType, searchQuery, isArtistSearchEnabled]);
 
   const [landingPageData] = useSuspenseQueries({
     queries: [
@@ -364,27 +399,44 @@ const ArticlesListingPage: React.FC = () => {
 
       <PageSection color={isDarkMode ? "bg-black" : "bg-white"}>
         <div className="flex flex-col gap-8 pt-[104px] pb-[160px]">
-          <div className="flex flex-wrap gap-3">
-            {filterOptions.map(option => {
-              const isActive = option.codename === selectedType;
-              return (
-                <button
-                  key={option.codename || "all"}
-                  onClick={() => handleArticleTypeChange(option)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    isActive
-                      ? isDarkMode
-                        ? "bg-white text-black"
-                        : "bg-darkGreen text-white"
-                      : isDarkMode
-                        ? "bg-black text-white border border-white/40 hover:bg-white/10"
-                        : "bg-white text-darkGreen border border-darkGreen/40 hover:bg-darkGreen/10"
+          <div className="flex flex-col gap-4">
+            {isArtistSearchEnabled && (
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search by keywords or title..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border text-sm ${
+                    isDarkMode
+                      ? "bg-black text-white border-white/40 placeholder-white/60 focus:border-white focus:outline-none"
+                      : "bg-white text-black border-darkGreen/40 placeholder-darkGreen/60 focus:border-darkGreen focus:outline-none"
                   }`}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
+                />
+              </div>
+            )}
+            <div className="flex flex-wrap gap-3">
+              {filterOptions.map(option => {
+                const isActive = option.codename === selectedType;
+                return (
+                  <button
+                    key={option.codename || "all"}
+                    onClick={() => handleArticleTypeChange(option)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      isActive
+                        ? isDarkMode
+                          ? "bg-white text-black"
+                          : "bg-darkGreen text-white"
+                        : isDarkMode
+                          ? "bg-black text-white border border-white/40 hover:bg-white/10"
+                          : "bg-white text-darkGreen border border-darkGreen/40 hover:bg-darkGreen/10"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           <ArticleList
             articles={filteredArticles.map(article => ({

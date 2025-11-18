@@ -137,6 +137,15 @@ export type Article = CoreContentType<
      * Guidelines: Select relevant music genres and eras for this article
      */
     readonly music_topics: Elements.TaxonomyElement<MusicArticles, "music_topics">;
+    /**
+     * Artist
+     *
+     * Type: text
+     * Required: false
+     * Codename: artist
+     * Id: f8bbb703-ff66-478d-b03c-4fc2d95352fb
+     */
+    readonly artist: Elements.TextElement;
   } & Metadata,
   "article"
 >;
@@ -159,7 +168,8 @@ export type ArticleElementCodenames =
   | "channel"
   | "x"
   | "linkedin"
-  | "music_topics";
+  | "music_topics"
+  | "artist";
 
 /**
  * Type guard for Article

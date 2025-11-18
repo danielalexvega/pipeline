@@ -20,22 +20,29 @@
  * Id: 5529c435-dcf2-4535-82d7-589c1a853f4d
  */
 export const musicArticlesValues = [
-  "folk",
+  "pop",
+  "hip_hop_rap",
+  "rock",
+  "punk",
+  "hardcore",
+  "post_hardcore",
+  "post_rock",
+  "pop_punk",
+  "alternative_rock",
+  "indie_rock",
+  "emo",
   "instrumental",
   "metal",
-  "emo",
   "funk",
+  "french_touch",
   "disco",
   "electronic",
   "country",
+  "bebop",
   "jazz",
-  "hip_hop_rap",
-  "pop",
-  "post_rock",
-  "pop_punk",
-  "punk",
-  "hardcore",
-  "rock",
+  "folk",
+  "ska",
+  "r_b",
 ] as const;
 
 /**

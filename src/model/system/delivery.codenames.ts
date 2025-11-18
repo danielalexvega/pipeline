@@ -30,6 +30,7 @@ export type ContentTypeCodenames =
   | "disclaimer"
   | "event"
   | "form__hubspot_integration"
+  | "genre"
   | "landing_page"
   | "page"
   | "person"
@@ -91,6 +92,8 @@ export type WorkflowStepCodenames =
  * Type representing all element codenames across all content types
  */
 export type ElementCodenames =
+  | "about"
+  | "artist"
   | "australian_museum_topics"
   | "author"
   | "autoplay"
@@ -136,6 +139,7 @@ export type ElementCodenames =
   | "prefix"
   | "publish_date"
   | "related_articles"
+  | "short_description_for_the_listener"
   | "start_date"
   | "style"
   | "subheadline"

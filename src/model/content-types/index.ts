@@ -21,6 +21,7 @@ export * from "./callToAction.ts";
 export * from "./disclaimer.ts";
 export * from "./event.ts";
 export * from "./formHubspotIntegration.ts";
+export * from "./genre.ts";
 export * from "./landingPage.ts";
 export * from "./page.ts";
 export * from "./person.ts";
