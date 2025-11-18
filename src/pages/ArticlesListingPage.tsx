@@ -262,7 +262,9 @@ const ArticlesListingPage: React.FC = () => {
   // Track search event when search query is present (including from URL params)
   useEffect(() => {
     if (ldClient && isArtistSearchEnabled && searchQuery.trim() && !hasTrackedSearch.current) {
-      ldClient.track("artist-search-used");
+      ldClient.track("artist-search-used", {
+        searchQuery: searchQuery.trim(),
+      });
       hasTrackedSearch.current = true;
     }
   }, [ldClient, isArtistSearchEnabled, searchQuery]);
